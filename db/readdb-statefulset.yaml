@@ -26,4 +26,7 @@ spec:
       name: readdb-pvc
     spec:
       storageClassName: k8s-nfs 
-      accessModes: [ "ReadWriteMany" ]
+      accessModes: [ "ReadWriteMany" ] 
+      resources:
+        requests:
+          storage: 10Gi
