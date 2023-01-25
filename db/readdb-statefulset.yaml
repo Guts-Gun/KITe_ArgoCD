@@ -17,14 +17,12 @@ spec:
     spec:
       containers:
       - name: readdb
-        image: mysql
+        image: mariadb
         ports:
         - containerPort: 3306
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: gutsandgun
-        - name: MYSQL_DATABASE
-          value: readdb
         volumeMounts:
         - name: readdb-pvc
           mountPath: /var/lib/mysql
