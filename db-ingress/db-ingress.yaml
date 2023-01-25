@@ -14,7 +14,7 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: read-service
+            name: keycloak-service
             port: 
-              number: 12002
+              number: 12001
               
