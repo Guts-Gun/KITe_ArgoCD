@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: readdb-statefulset
+spec:
+  serviceName: readdb-service
+  replicas: 3
+  selector:
+    matchLabels:
+      app: readdb-pod
+  template:
+    metadata:
+      labels:
+        app: readdb-pod
+    spec:
+      containers:
+      - name: readdb
+        image: mariadb
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: readdb-pvc
+          mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+  - metadata:
+      name: readdb-pvc
+    spec:
+      storageClassName: k8s-nfs 
+      accessModes: [ "ReadWriteMany" ]
