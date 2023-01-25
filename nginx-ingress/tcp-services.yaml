@@ -3,7 +3,7 @@ kind: ConfigMap
 metadata:
   name: tcp-services
 data:
-  12001: db/keycloak-service:3306
+  80: db/keycloak-service:3306
   12002: db/read-service:3306
   12003: db/user-service:3306
   12004: db/log-service:3306
