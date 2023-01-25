@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: log-statefulset
+  labels:
+    app: log
+spec:
+  serviceName: log-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: log
+  template:
+    metadata:
+      labels:
+        app: log
+    spec:
+      containers:
+      - name: log
+        image: mariadb
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: gutsandgun
+        volumeMounts:
+        - name: log-pvc
+          mountPath: /var/lib/mysql
+        - name: config
+          mountPath: /etc/mysql/conf.d
+      volumes:
+       - name: log-pvc # same as volumemouts name
+         nfs:
+           server: 172.30.1.100
+           path: /k8s/db_set/log
+       - name: config
+         configMap:
+           name: master.cnf

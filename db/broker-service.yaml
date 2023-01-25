@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: broker-service
+  labels:
+    app: broker
+spec:
+  ports:
+  - name: broker-statefulset
+    port: 3306
+  selector:
+    app: broker
+    
