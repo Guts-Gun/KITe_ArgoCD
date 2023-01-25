@@ -2,7 +2,7 @@
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: k8s-nfs
-provisioner: k8s-nfs
+  name: nfs-storageclass
+provisioner: nfs-provisioner
 parameters:
   archiveOnDelete: "false"
