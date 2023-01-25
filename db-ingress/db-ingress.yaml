@@ -16,5 +16,5 @@ spec:
           service:
             name: keycloak-service
             port: 
-              number: 80
+              number: 12001
               
