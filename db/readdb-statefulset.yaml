@@ -26,13 +26,13 @@ spec:
         volumeMounts:
         - name: readdb-pvc
           mountPath: /var/lib/mysql
-        - name: readdb-config
+        - name: config
           mountPath: /etc/mysql/conf.d
       volumes:
        - name: readdb-pvc # same as volumemouts name
          nfs:
            server: 172.30.1.100
            path: /k8s/db_set/readdb
-       - name: readdb-config
+       - name: config
          configMap:
-           name: master.cnf
+           name: db_config

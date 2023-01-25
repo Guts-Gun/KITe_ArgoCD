@@ -1,13 +1,19 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: readdb-config
-  labels:
-    app: readdb
+  name: db-config
 data:
   master.cnf: |
     [mysqld]
     log-bin
+    
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-slave-config
+data:
   slave.cnf: |
     [mysqld]
     super-read-only
