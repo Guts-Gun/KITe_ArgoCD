@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: readdb-statefulset
 spec:
-  serviceName: readdb-service
   replicas: 3
   selector:
     matchLabels:
