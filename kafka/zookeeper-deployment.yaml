@@ -20,11 +20,11 @@ spec:
           name: zookeeper
           ports:
             - containerPort: 2181
-      volumeMounts:
+        volumeMounts:
         - mountPath: /opt/zookeeper-3.4.13
           name: zookeeper-data
-    volumes:
-    - name: zookeeper-data # same as volumemouts name
-      nfs:
-        server: 172.30.1.100
-        path: /k8s/zookeeper
+      volumes:
+      - name: zookeeper-data # same as volumemouts name
+        nfs:
+          server: 172.30.1.100
+          path: /k8s/zookeeper
