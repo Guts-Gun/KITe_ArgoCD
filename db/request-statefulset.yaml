@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: request-statefulset
+  labels:
+    app: request
+spec:
+  serviceName: request-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: request
+  template:
+    metadata:
+      labels:
+        app: request
+    spec:
+      containers:
+      - name: request
+        image: mariadb
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: gutsandgun
+        volumeMounts:
+        - name: request-pvc
+          mountPath: /var/lib/mysql
+        - name: config
+          mountPath: /etc/mysql/conf.d
+      volumes:
+       - name: request-pvc # same as volumemouts name
+         nfs:
+           server: 172.30.1.100
+           path: /k8s/db_set/request
+       - name: config
+         configMap:
+           name: master.cnf

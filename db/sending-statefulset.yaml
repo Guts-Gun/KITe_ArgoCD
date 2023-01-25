@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: sending-statefulset
+  labels:
+    app: sending
+spec:
+  serviceName: sending-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sending
+  template:
+    metadata:
+      labels:
+        app: sending
+    spec:
+      containers:
+      - name: sending
+        image: mariadb
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: gutsandgun
+        volumeMounts:
+        - name: sending-pvc
+          mountPath: /var/lib/mysql
+        - name: config
+          mountPath: /etc/mysql/conf.d
+      volumes:
+       - name: sending-pvc # same as volumemouts name
+         nfs:
+           server: 172.30.1.100
+           path: /k8s/db_set/sending
+       - name: config
+         configMap:
+           name: master.cnf
