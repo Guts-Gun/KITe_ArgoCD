@@ -22,7 +22,7 @@ spec:
             value: gutsandgun
         volumeMounts:
         - name: readdb-pvc
-          mountPath: /var/lib/mysql/mysql
+          mountPath: /var/lib/mysql
       volumes:
        - name: readdb-pvc # same as volumemouts name
          nfs:
