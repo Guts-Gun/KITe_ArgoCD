@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-config-ingress
+data:
+  12001: db/keycloak-service:3306
+  12002: db/read-service:3306
+  12003: db/user-service:3306
+  12004: db/log-service:3306
+  12005: db/request-service:3306
+  12006: db/sending-service:3306
+  12007: db/broker-service:3306
+  12008: db/scheduler-service:3306
+  

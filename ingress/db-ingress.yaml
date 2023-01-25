@@ -10,67 +10,67 @@ spec:
   rules:
   - http:
       paths:
-      - path: /read
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: read-service
             port: 
-              number: 3306
+              number: 12002
           
-      - path: /user
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: user-service
             port: 
-              number: 3306
+              number: 12003
           
-      - path: /scheduler
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: scheduler-service
             port: 
-              number: 3306
+              number: 12008
               
-      - path: /log
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: log-service
             port: 
-              number: 3306
+              number: 12004
               
-      - path: /broker
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: broker-service
             port: 
-              number: 3306
+              number: 12007
               
-      - path: /request
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: request-service
             port: 
-              number: 3306
+              number: 12005
               
-      - path: /sending
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: sending-service
             port: 
-              number: 3306
+              number: 12006
               
-      - path: /keycloak
+      - path: /
         pathType: Prefix
         backend:
           service:
             name: keycloak-service
             port: 
-              number: 3306
+              number: 12001
               
