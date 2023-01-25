@@ -35,4 +35,4 @@ spec:
            path: /k8s/db_set/readdb
        - name: config
          configMap:
-           name: db_config
+           name: master.cnf

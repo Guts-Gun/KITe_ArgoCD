@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: db-config
+  name: master.cnf
 data:
   master.cnf: |
     [mysqld]
@@ -12,7 +12,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: db-slave-config
+  name: slave.cnf
 data:
   slave.cnf: |
     [mysqld]
