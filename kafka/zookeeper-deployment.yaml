@@ -15,11 +15,11 @@ spec:
         app: zookeeper
     spec:
       containers:
-        - image: wurstmeister/zookeeper
-          imagePullPolicy: IfNotPresent
-          name: zookeeper
-          ports:
-            - containerPort: 2181
+      - image: wurstmeister/zookeeper
+        imagePullPolicy: IfNotPresent
+        name: zookeeper
+        ports:
+        - containerPort: 2181
         volumeMounts:
         - mountPath: /opt/zookeeper-3.4.13
           name: zookeeper-data
