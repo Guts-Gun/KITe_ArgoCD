@@ -25,7 +25,7 @@ spec:
   - metadata:
       name: readdb-pvc
     spec:
-      storageClassName: k8s-nfs-storageclass
+      storageClassName: k8s-nfs
       accessModes: [ "ReadWriteMany" ] 
       resources:
         requests:
