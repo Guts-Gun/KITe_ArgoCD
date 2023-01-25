@@ -14,62 +14,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: read-service
-            port: 
-              number: 12002
-          
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: user-service
-            port: 
-              number: 12003
-          
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: scheduler-service
-            port: 
-              number: 12008
-              
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: log-service
-            port: 
-              number: 12004
-              
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: broker-service
-            port: 
-              number: 12007
-              
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: request-service
-            port: 
-              number: 12005
-              
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: sending-service
-            port: 
-              number: 12006
-              
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
             name: keycloak-service
             port: 
               number: 12001
