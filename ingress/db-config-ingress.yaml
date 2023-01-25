@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: db-config-ingress
+  name: tcp-services
 data:
   12001: db/keycloak-service:3306
   12002: db/read-service:3306
