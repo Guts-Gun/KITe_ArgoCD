@@ -4,7 +4,7 @@ metadata:
   name: db-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
-    ingress.kubernetes.io/ssl-redirect: "true"
+    ingress.kubernetes.io/forse-ssl-redirect: "true"
     nginx.ingress.kubernetes.io/enable-cors: "false"
 spec:
   rules:
