@@ -23,7 +23,6 @@ spec:
         env:
           - name: MYSQL_ROOT_PASSWORD
             value: gutsandgun
-        env:
           - name: MYSQL_DATABASE
             value: readdb
         volumeMounts:
