@@ -18,6 +18,9 @@ spec:
         image: mariadb
         ports:
         - containerPort: 3306
+        env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: gutsandgun
         volumeMounts:
         - name: readdb-pvc
           mountPath: /var/lib/mysql
