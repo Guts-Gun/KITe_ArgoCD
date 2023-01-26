@@ -32,12 +32,12 @@ spec:
         ports:
         - containerPort: 9092
         volumeMounts:
-        - name: kafka-lib
-          mountPath: /opt/kafka_2.13-2.8.1/lib
+        - name: kafka-data
+          mountPath: /opt/kafka_2.13-2.8.1
           
   volumeClaimTemplates:
   - metadata:
-      name: kafka-lib
+      name: kafka-data
       namespace: nfs
     spec:
       storageClassName: nfs-storageclass
