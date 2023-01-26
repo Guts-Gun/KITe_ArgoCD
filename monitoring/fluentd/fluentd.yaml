@@ -84,10 +84,16 @@ spec:
           readOnly: true
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: varlog
-        nfs:
-          server: 172.30.1.100
-          path: /k8s/fluentd
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
+    volumeClaimTemplates:
+    - metadata:
+        name: varlog
+      spec:
+        storageClassName: nfs-storageclass
+        accessModes: [ "ReadWriteMany" ] 
+        resources:
+          requests:
+            storage: 5Gi
+      
