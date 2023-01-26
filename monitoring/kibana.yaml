@@ -19,7 +19,7 @@ spec:
         image: elastic/kibana:7.14.1
         env:
         - name: SERVER_NAME
-          value: kibana.kubenetes.example.com
+          value: gutsandgun.kro.kr
         - name: ELASTICSEARCH_HOSTS
           value: http://elasticsearch-svc:9200
         ports:
