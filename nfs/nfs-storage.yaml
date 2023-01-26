@@ -4,5 +4,6 @@ kind: StorageClass
 metadata:
   name: nfs-storageclass
 provisioner: nfs-provisioner
+volumeBindingMode: "WaitForFirstConsumer"
 parameters:
   archiveOnDelete: "false"
