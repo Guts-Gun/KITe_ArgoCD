@@ -32,11 +32,18 @@ spec:
         ports:
         - containerPort: 9092
         volumeMounts:
-        - name: kafka-libs
-          mountPath: /opt/kafka_2.13-2.8.1/libs
+        - name: kafka-plugin
+          mountPath: /opt/kafka_2.13-2.8.1/connectors
+        volumeMounts:
+        - name: kafka-config
+          mountPath: /opt/kafka/config
       volumes:
-      - name: kafka-libs # same as volumemouts name
+      - name: kafka-plugin # same as volumemouts name
         nfs:
           server: 172.30.1.100
-          path: /k8s/kafka_libs
+          path: /k8s/kafka/kafka-plugin
+      - name: kafka-config # same as volumemouts name
+        nfs:
+          server: 172.30.1.100
+          path: /k8s/kafka/kafka-config
         
