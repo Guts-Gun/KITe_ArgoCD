@@ -32,9 +32,21 @@ spec:
         - containerPort: 9092
         volumeMounts:
         - mountPath: /kafka
+          name: broker-log
+        - mountPath: /opt/kafka
+          name: kafka
+        - mountPath: /opt/kafka_2.13-2.8.1
           name: kafka-data
       volumes:
+      - name: broker-log # same as volumemouts name
+        nfs:
+          server: 172.30.1.100
+          path: /k8s/kafka/broker-log
+      - name: kafka # same as volumemouts name
+        nfs:
+          server: 172.30.1.100
+          path: /k8s/kafka/kafka
       - name: kafka-data # same as volumemouts name
         nfs:
           server: 172.30.1.100
-          path: /k8s/kafka
+          path: /k8s/kafka/kafka-data
