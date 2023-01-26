@@ -32,17 +32,17 @@ spec:
         ports:
         - containerPort: 9092
         volumeMounts:
-        - name: kafka-lib
-          mountPath: /opt/kafka_2.13-2.8.1/lib
+        - name: kafka-libs
+          mountPath: /opt/kafka_2.13-2.8.1/libs
         volumeMounts:
-        - name: kafka-lib2
-          mountPath: /qweqwe
+        - name: kafka-tmp
+          mountPath: /kafka_tmp
         command: ["/bin/sh"]
-        args: ["-c", "cp -r /opt/kafka_2.13-2.8.1 /qweqwe"]
+        args: ["-c", "cp -r /opt/kafka_2.13-2.8.1/libs /kafka_tmp && cp -r /kafka_tmp /opt/kafka_2.13-2.8.1/libs"]
           
   volumeClaimTemplates:
   - metadata:
-      name: kafka-lib2
+      name: kafka-libs
     spec:
       storageClassName: nfs-storageclass
       accessModes: [ "ReadWriteMany" ] 
