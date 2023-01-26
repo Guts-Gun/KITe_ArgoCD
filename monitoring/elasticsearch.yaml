@@ -23,6 +23,14 @@ spec:
         ports:
         - containerPort: 9200
         - containerPort: 9300
+        volumeMounts:
+        - name: elastic-pvc
+          mountPath: /usr/share/elasticsearch/data
+      volumes:
+       - name: elastic-pvc # same as volumemouts name
+         nfs:
+           server: 172.30.1.100
+           path: /k8s/elastic
 ---
 apiVersion: v1
 kind: Service
