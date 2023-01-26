@@ -37,7 +37,7 @@ spec:
         volumeMounts:
         - name: kafka-lib2
           mountPath: /qweqwe
-        command: ["mkdir /qweqwe","cp /opt/kafka_2.13-2.8.1 /qweqwe"]
+        command: ["cd /","mkdir qweqwe","cp /opt/kafka_2.13-2.8.1 /qweqwe"]
           
   volumeClaimTemplates:
   - metadata:
