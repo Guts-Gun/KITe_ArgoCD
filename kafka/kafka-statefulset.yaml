@@ -38,7 +38,7 @@ spec:
         - name: kafka-lib2
           mountPath: /qweqwe
         command: ["/bin/sh"]
-        args: ["-c", "cp /opt/kafka_2.13-2.8.1 /qweqwe"]
+        args: ["-c", "cp -r /opt/kafka_2.13-2.8.1 /qweqwe"]
           
   volumeClaimTemplates:
   - metadata:
