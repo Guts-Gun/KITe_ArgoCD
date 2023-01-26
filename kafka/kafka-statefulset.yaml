@@ -34,8 +34,6 @@ spec:
         volumeMounts:
         - name: kafka-libs
           mountPath: /opt/kafka_2.13-2.8.1/libs
-        command: ["/bin/sh"]
-        args: ["-c", "connect-distributed.sh /opt/kafka/config/connect-distributed.properties"]
       volumes:
       - name: kafka-libs # same as volumemouts name
         nfs:
