@@ -33,8 +33,7 @@ metadata:
   name: kibana-svc
 spec:
   ports:
-  - nodePort: 30561
-    port: 5601
+  - port: 8007
     protocol: TCP
     targetPort: 5601
   selector:
