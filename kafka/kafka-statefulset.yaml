@@ -38,6 +38,7 @@ spec:
   volumeClaimTemplates:
   - metadata:
       name: kafka-lib
+      namespace: nfs
     spec:
       storageClassName: nfs-storageclass
       accessModes: [ "ReadWriteMany" ] 
