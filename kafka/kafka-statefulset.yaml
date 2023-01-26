@@ -34,18 +34,9 @@ spec:
         volumeMounts:
         - name: kafka-libs
           mountPath: /opt/kafka_2.13-2.8.1/libs
-        volumeMounts:
-        - name: kafka-tmp
-          mountPath: /qweqwe
-        command: ["/bin/sh"]
-        args: ["-c", "cp -r /opt/kafka_2.13-2.8.1/libs /qweqwe && cp -r /qweqwe /opt/kafka_2.13-2.8.1/libs"]
-          
-  volumeClaimTemplates:
-  - metadata:
-      name: kafka-libs
-    spec:
-      storageClassName: nfs-storageclass
-      accessModes: [ "ReadWriteMany" ] 
-      resources:
-        requests:
-          storage: 1Gi
+      volumes:
+      - name: kafka-libs # same as volumemouts name
+        nfs:
+          server: 172.30.1.100
+          path: /k8s/kafka_libs
+         
