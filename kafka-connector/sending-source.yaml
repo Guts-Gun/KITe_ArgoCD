@@ -10,7 +10,7 @@ spec:
   tasksMax: 1
   config:
     tasks.max: 1
-    database.hostname: sending.db.svc.cluster.local
+    database.hostname: sending-service.db.svc.cluster.local
     database.port: 3306
     database.sending: root
     database.password: gutsandgun

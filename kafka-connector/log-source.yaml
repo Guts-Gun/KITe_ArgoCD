@@ -10,7 +10,7 @@ spec:
   tasksMax: 1
   config:
     tasks.max: 1
-    database.hostname: log.db.svc.cluster.local
+    database.hostname: log-service.db.svc.cluster.local
     database.port: 3306
     database.log: root
     database.password: gutsandgun

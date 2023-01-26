@@ -10,7 +10,7 @@ spec:
   tasksMax: 1
   config:
     tasks.max: 1
-    database.hostname: broker.db.svc.cluster.local
+    database.hostname: broker-service.db.svc.cluster.local
     database.port: 3306
     database.broker: root
     database.password: gutsandgun
