@@ -1,10 +1,11 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: Statefulset
 metadata:
   labels:
     app: kafka-broker
   name: kafka-broker
 spec:
+  serviceName: kafka-service
   replicas: 1
   selector:
     matchLabels:
