@@ -34,7 +34,6 @@ spec:
         volumeMounts:
         - name: kafka-plugin
           mountPath: /opt/kafka_2.13-2.8.1/connectors
-        volumeMounts:
         - name: kafka-config
           mountPath: /opt/kafka/config
       volumes:
