@@ -85,8 +85,9 @@ spec:
       terminationGracePeriodSeconds: 30
       volumes:
       - name: varlog
-        hostPath:
-          path: /var/log
+        nfs:
+          server: 172.30.1.100
+          path: /k8s/fluentd
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
