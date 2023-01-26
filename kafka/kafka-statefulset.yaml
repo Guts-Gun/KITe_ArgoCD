@@ -36,9 +36,9 @@ spec:
           mountPath: /opt/kafka_2.13-2.8.1/libs
         volumeMounts:
         - name: kafka-tmp
-          mountPath: /kafka_tmp
+          mountPath: /qweqwe
         command: ["/bin/sh"]
-        args: ["-c", "cp -r /opt/kafka_2.13-2.8.1/libs /kafka_tmp && cp -r /kafka_tmp /opt/kafka_2.13-2.8.1/libs"]
+        args: ["-c", "cp -r /opt/kafka_2.13-2.8.1/libs /qweqwe && cp -r /qweqwe /opt/kafka_2.13-2.8.1/libs"]
           
   volumeClaimTemplates:
   - metadata:
