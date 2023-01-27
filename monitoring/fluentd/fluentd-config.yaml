@@ -27,7 +27,7 @@ data:
        type_name fluentd
        buffer_chunk_limit 2M
        buffer_queue_limit 32
-       flush_interval 5s
+       flush_interval 30s
        max_retry_wait 30
        disable_retry_limit 
        num_threads 8
