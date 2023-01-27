@@ -20,6 +20,12 @@ spec:
         env:
         - name: discovery.type
           value: single-node
+        resources:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 200Mi
         ports:
         - containerPort: 9200
         - containerPort: 9300
