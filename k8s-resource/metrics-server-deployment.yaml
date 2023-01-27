@@ -13,7 +13,7 @@ metadata:
   labels:
     k8s-app: metrics-server
 spec:
-  replica: 2
+  replicas: 2
   selector:
     matchLabels:
       k8s-app: metrics-server
