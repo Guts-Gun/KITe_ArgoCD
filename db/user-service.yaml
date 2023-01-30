@@ -10,5 +10,4 @@ spec:
     port: 3306
   selector:
     app: user
-  type: LoadBalancer
   
