@@ -67,40 +67,21 @@ spec:
         - bash
         - "-c"
         - |
-          mysql -u root -pgutsandgun
-        - |
-          create database read;
-        - |
-          exit
-        - |
-          rm -rf /etc/mysql/conf.d/master.sql
-        - |
-          mysqldump -u root -pgutsandgun --all-databases > /etc/mysql/conf.d/master.sql
-        - |
-          set -ex
-          # Generate mysql server-id from pod ordinal index.
-          [[ `uname -n` =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
-          echo [mysqld] > /mnt/conf.d/server-id.cnf
-          # Add an offset to avoid reserved server-id=0 value.
-          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
-          # Copy my.cnf file from config-map to conf-2 volume(emptyDir).
-          cp /mnt/config-map/my.cnf /mnt/conf-2/
-          # Copy appropriate conf.d files from config-map to emptyDir.
-          if [[ $ordinal -eq 0 ]]; then
-            cp /mnt/config-map/primary.cnf /mnt/conf.d/
-          else
-            cp /mnt/config-map/replica.cnf /mnt/conf.d/
-          fi
+          echo "Waiting for mysqld to be ready (accepting connections)"
+          until mysql -h 127.0.0.1 -e "SELECT 1" -pgutsandgun; do sleep 1; done
+          echo "Initializing replication from clone position"
+          mysql -u root -pgutsandgun < master.sql
+          mysql -h 127.0.0.1 \
+                -pgutsandgun \
+                -e "$(<change_master_to.sql.in), \
+                        MASTER_HOST='read-statefulset-0.read', \
+                        MASTER_USER='root', \
+                        MASTER_PASSWORD='gutsandgun', \
+                        MASTER_CONNECT_RETRY=10; \
+                      START SLAVE;" || exit 1 
         ports:
         - name: read
           containerPort: 3306
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/mysql
-          subPath: mysql
-        - name: conf
-          mountPath: /etc/mysql/conf.d
         livenessProbe:
           exec:
             command: ["mysqladmin", "ping"]
@@ -114,38 +95,15 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 2
           timeoutSeconds: 1
-      - name: xtrabackup
-        image: hiroaki2020/dtuj_xtrabackup:1.0
-        securityContext:
-          runAsUser: 0
-          runAsGroup: 0
-        ports:
-        - name: xtrabackup
-          containerPort: 3307
-        command:
-        - bash
-        - "-c"
-        - |
-          echo "Waiting for mysqld to be ready (accepting connections)"
-          until mysql -h 127.0.0.1 -e "SELECT 1" -pgutsandgun; do sleep 1; done
-          echo "Initializing replication from clone position"
-          mysql -u root -pgutsandgun < master.sql
-          mysql -h 127.0.0.1 \
-                -pgutsandgun \
-                -e "$(<change_master_to.sql.in), \
-                        MASTER_HOST='read-statefulset-0.read', \
-                        MASTER_USER='root', \
-                        MASTER_PASSWORD='gutsandgun', \
-                        MASTER_CONNECT_RETRY=10; \
-                      START SLAVE;" || exit 1   
         volumeMounts:
+        - name: conf
+          mountPath: /mnt/conf.d
+        - name: conf-2
+          mountPath: /mnt/conf-2
+        - name: config-map
+          mountPath: /mnt/config-map
         - name: data
           mountPath: /var/lib/mysql
-          subPath: mysql
-        - name: conf
-          mountPath: /etc/mysql/conf.d
-        - name: conf-2
-          mountPath: /etc/mysql
       volumes:
       - name: conf # same as volumemouts name
         nfs:
