@@ -42,7 +42,7 @@ spec:
         - name: config-map
           mountPath: /mnt/config-map
       - name: clone-read
-        image: cardonaje/mariabackup-docker
+        image: gingeredgiantkc/mariabackup
         command:
         - bash
         - "-c"
@@ -101,7 +101,7 @@ spec:
           periodSeconds: 2
           timeoutSeconds: 1
       - name: mariabackup
-        image: cardonaje/mariabackup-docker
+        image: gingeredgiantkc/mariabackup
         ports:
         - name: mariabackup
           containerPort: 3307
