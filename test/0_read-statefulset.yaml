@@ -23,24 +23,6 @@ spec:
         - bash
         - "-c"
         - |
-          mysql -u root -pgutsandgun
-        - |
-          create database read;
-        - |
-          exit
-        - |
-          rm -rf /etc/mysql/conf.d/master.sql
-        - |
-          mysqldump -u root -pgutsandgun --all-databases > /etc/mysql/conf.d/master.sql
-        - |
-          set -ex
-          # Generate mysql server-id from pod ordinal index.
-          [[ `uname -n` =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
-          echo [mysqld] > /mnt/conf.d/server-id.cnf
-          # Add an offset to avoid reserved server-id=0 value.
-          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
-          # Copy my.cnf file from config-map to conf-2 volume(emptyDir).
           cp /mnt/config-map/my.cnf /mnt/conf-2/
           # Copy appropriate conf.d files from config-map to emptyDir.
           if [[ $ordinal -eq 0 ]]; then
@@ -48,6 +30,18 @@ spec:
           else
             cp /mnt/config-map/replica.cnf /mnt/conf.d/
           fi
+        - |
+          echo "Create read db..."
+          mysql -u root -pgutsandgun
+        - |
+          create database read;
+        - |
+          exit
+          echo "Create master dump file..."
+        - |
+          rm -rf /etc/mysql/conf.d/master.sql
+        - |
+          mysqldump -u root -pgutsandgun --all-databases > /etc/mysql/conf.d/master.sql
         volumeMounts:
         - name: conf
           mountPath: /mnt/conf.d
@@ -116,12 +110,12 @@ spec:
       - name: config-map
         configMap:
           name: read-config
-  volumeClaimTemplates:
-  - metadata:
-      name: data
-    spec:
-      accessModes: ["ReadWriteOnce"]
-      storageClassName: nfs-storageclass
-      resources:
-        requests:
-          storage: 100Gi
+    volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: nfs-storageclass
+        resources:
+          requests:
+            storage: 100Gi
