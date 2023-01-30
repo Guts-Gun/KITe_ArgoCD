@@ -21,6 +21,7 @@ spec:
         - "-c"
         - |
           set -ex
+          mkdir -p /var/lib/mysql/read
           # Generate mysql server-id from pod ordinal index.
           [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
           ordinal=${BASH_REMATCH[1]}
@@ -38,6 +39,8 @@ spec:
           mountPath: /mnt/conf.d
         - name: config-map
           mountPath: /mnt/config-map
+        - name: data
+          mountPath: /var/lib/mysql
       - name: clone-read
         image: gcr.io/google-samples/xtrabackup:1.0
         command:
