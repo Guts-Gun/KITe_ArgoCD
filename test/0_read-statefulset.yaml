@@ -14,7 +14,7 @@ spec:
         app: read
     spec:
       initContainers:
-      - name: init-read
+      - name: master-read
         image: mariadb
         env:
         - name: MYSQL_ROOT_PASSWORD
@@ -22,6 +22,16 @@ spec:
         command:
         - bash
         - "-c"
+        - |
+          mysql -u root -pgutsandgun
+        - |
+          create database read;
+        - |
+          exit
+        - |
+          rm -rf /etc/mysql/conf.d/master.sql
+        - |
+          mysqldump -u root -pgutsandgun --all-databases > /etc/mysql/conf.d/master.sql
         - |
           set -ex
           # Generate mysql server-id from pod ordinal index.
@@ -37,7 +47,7 @@ spec:
             cp /mnt/config-map/primary.cnf /mnt/conf.d/
           else
             cp /mnt/config-map/replica.cnf /mnt/conf.d/
-          fi          
+          fi
         volumeMounts:
         - name: conf
           mountPath: /mnt/conf.d
@@ -45,40 +55,43 @@ spec:
           mountPath: /mnt/conf-2
         - name: config-map
           mountPath: /mnt/config-map
-      - name: clone-read
-        image: hiroaki2020/dtuj_xtrabackup:1.0
-        securityContext:
-          runAsUser: 0
-          runAsGroup: 0
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          # Skip the clone if data already exists.
-          [[ -d /var/lib/mysql/mysql ]] && exit 0
-          # Skip the clone on primary (ordinal index 0).
-          [[ `uname -n` =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
-          [[ $ordinal -eq 0 ]] && exit 0
-          # Clone data from previous peer.
-          ncat --recv-only read-statefulset-$(($ordinal-1)).read 3307 | xbstream -x -C /var/lib/mysql
-          # Prepare the backup.
-          xtrabackup --prepare --target-dir=/var/lib/mysql          
-        volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
-          subPath: mysql
-        - name: conf
-          mountPath: /etc/mysql/conf.d
-        - name: conf-2
-          mountPath: /etc/mysql
       containers:
-      - name: read
+      - name: slave-read
         image: mariadb
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: "gutsandgun"
+        command:
+        - bash
+        - "-c"
+        - |
+          mysql -u root -pgutsandgun
+        - |
+          create database read;
+        - |
+          exit
+        - |
+          rm -rf /etc/mysql/conf.d/master.sql
+        - |
+          mysqldump -u root -pgutsandgun --all-databases > /etc/mysql/conf.d/master.sql
+        - |
+          set -ex
+          # Generate mysql server-id from pod ordinal index.
+          [[ `uname -n` =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          echo [mysqld] > /mnt/conf.d/server-id.cnf
+          # Add an offset to avoid reserved server-id=0 value.
+          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
+          # Copy my.cnf file from config-map to conf-2 volume(emptyDir).
+          cp /mnt/config-map/my.cnf /mnt/conf-2/
+          # Copy appropriate conf.d files from config-map to emptyDir.
+          if [[ $ordinal -eq 0 ]]; then
+            cp /mnt/config-map/primary.cnf /mnt/conf.d/
+          else
+            cp /mnt/config-map/replica.cnf /mnt/conf.d/
+          fi
         ports:
         - name: read
           containerPort: 3306
@@ -113,41 +126,18 @@ spec:
         - bash
         - "-c"
         - |
-          set -ex
-          cd /var/lib/mysql
-          # Determine binlog position of cloned data, if any.
-          if [[ -f xtrabackup_slave_info && "x$(<xtrabackup_slave_info)" != "x" ]]; then
-            # XtraBackup already generated a partial "CHANGE MASTER TO" query
-            # because we're cloning from an existing replica. (Need to remove the tailing semicolon!)
-            cat xtrabackup_slave_info | sed -E 's/;$//g' > change_master_to.sql.in
-            # Ignore xtrabackup_binlog_info in this case (it's useless).
-            rm -f xtrabackup_slave_info xtrabackup_binlog_info
-          elif [[ -f xtrabackup_binlog_info ]]; then
-            # We're cloning directly from primary. Parse binlog position.
-            [[ `cat xtrabackup_binlog_info` =~ ^([^.]*\.[0-9]+)[[:space:]]+([0-9]+) ]] || exit 1
-            rm -f xtrabackup_binlog_info xtrabackup_slave_info
-            echo "CHANGE MASTER TO MASTER_LOG_FILE='${BASH_REMATCH[1]}',\
-                  MASTER_LOG_POS=${BASH_REMATCH[2]}" > change_master_to.sql.in
-          fi
-          # Check if we need to complete a clone by starting replication.
-          if [[ -f change_master_to.sql.in ]]; then
-            echo "Waiting for mysqld to be ready (accepting connections)"
-            until mysql -h 127.0.0.1 -e "SELECT 1" -pgutsandgun; do sleep 1; done
-            echo "Initializing replication from clone position"
-            mysql -h 127.0.0.1 \
-                  -pgutsandgun \
-                  -e "$(<change_master_to.sql.in), \
-                          MASTER_HOST='read-statefulset-0.read', \
-                          MASTER_USER='root', \
-                          MASTER_PASSWORD='gutsandgun', \
-                          MASTER_CONNECT_RETRY=10; \
-                        START SLAVE;" || exit 1
-            # In case of container restart, attempt this at-most-once.
-            mv change_master_to.sql.in change_master_to.sql.orig
-          fi
-          # Start a server to send backups when requested by peers.
-          exec ncat --listen --keep-open --send-only --max-conns=1 3307 -c \
-            "xtrabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root"          
+          echo "Waiting for mysqld to be ready (accepting connections)"
+          until mysql -h 127.0.0.1 -e "SELECT 1" -pgutsandgun; do sleep 1; done
+          echo "Initializing replication from clone position"
+          mysql -u root -pgutsandgun < master.sql
+          mysql -h 127.0.0.1 \
+                -pgutsandgun \
+                -e "$(<change_master_to.sql.in), \
+                        MASTER_HOST='read-statefulset-0.read', \
+                        MASTER_USER='root', \
+                        MASTER_PASSWORD='gutsandgun', \
+                        MASTER_CONNECT_RETRY=10; \
+                      START SLAVE;" || exit 1   
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
@@ -157,10 +147,14 @@ spec:
         - name: conf-2
           mountPath: /etc/mysql
       volumes:
-      - name: conf
-        emptyDir: {}
-      - name: conf-2
-        emptyDir: {}
+      - name: conf # same as volumemouts name
+        nfs:
+          server: 172.30.1.100
+          path: /k8s/db_config/read/conf
+      - name: conf-2 # same as volumemouts name
+        nfs:
+          server: 172.30.1.100
+          path: /k8s/db_config/read/conf-2
       - name: config-map
         configMap:
           name: read-config
