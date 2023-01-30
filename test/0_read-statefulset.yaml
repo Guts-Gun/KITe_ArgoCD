@@ -42,7 +42,7 @@ spec:
         - name: config-map
           mountPath: /mnt/config-map
       - name: clone-read
-        image: mattgrayisok/mariabackup-alpine-ncat
+        image: cardonaje/mariabackup-docker
         command:
         - bash
         - "-c"
@@ -100,7 +100,7 @@ spec:
           periodSeconds: 2
           timeoutSeconds: 1
       - name: mariabackup
-        image: mattgrayisok/mariabackup-alpine-ncat
+        image: cardonaje/mariabackup-docker
         ports:
         - name: mariabackup
           containerPort: 3307
