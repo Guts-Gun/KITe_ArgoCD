@@ -115,6 +115,7 @@ spec:
           mkdir -p read
           # Determine binlog position of cloned data, if any.
           if [[ -f xtrabackup_slave_info && "x$(<xtrabackup_slave_info)" != "x" ]]; then
+            echo `cat xtrabackup_slave_info`
             cat xtrabackup_slave_info | sed -E 's/;$//g' > change_master_to.sql.in
             rm -f xtrabackup_slave_info xtrabackup_binlog_info
           elif [[ -f xtrabackup_binlog_info ]]; then
