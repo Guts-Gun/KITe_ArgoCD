@@ -7,9 +7,9 @@ metadata:
 data:
   primary.cnf: |
     # Apply this config only on the primary.
-    [mysqld]
+    [mariadb]
     log-bin
   replica.cnf: |
     # Apply this config only on replicas.
-    [mysqld]
-    super-read-only
+    [mariadb]
+    read-only
