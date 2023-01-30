@@ -16,6 +16,9 @@ spec:
       initContainers:
       - name: init-read
         image: mariadb
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "gutsandgun"
         command:
         - bash
         - "-c"
