@@ -34,8 +34,17 @@ spec:
           # Copy appropriate conf.d files from config-map to emptyDir.
           if [[ $ordinal -eq 0 ]]; then
             cp /mnt/config-map/primary.cnf /etc/mysql/conf.d
+            mysqldump -u root -pgutsandgun --all-databases > /etc/mysql/master/master.sql
           else
             cp /mnt/config-map/replica.cnf /etc/mysql/conf.d
+            mysql -u root \
+                  -pgutsandgun \
+                  -e "$(</etc/mysql/master/master.sql), \
+                          MASTER_HOST='read-statefulset-0', \
+                          MASTER_USER='root', \
+                          MASTER_PASSWORD='gutsandgun', \
+                          MASTER_CONNECT_RETRY=10; \
+                        START SLAVE;" || exit 1
           fi
         volumeMounts:
         - name: master
