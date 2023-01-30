@@ -61,18 +61,19 @@ spec:
         - bash
         - "-c"
         - |
-          echo "Waiting for mysqld to be ready (accepting connections)"
-          until mysql -h 127.0.0.1 -e "SELECT 1" -pgutsandgun; do sleep 1; done
-          echo "Initializing replication from clone position"
-          mysql -u root -pgutsandgun < master.sql
-          mysql -h 127.0.0.1 \
+          if [[ -f /etc/mysql/conf.d/master.sql ]]; then
+            echo "Waiting for mysqld to be ready (accepting connections)"
+            until mysql -u root -e "SELECT 1" -pgutsandgun; do sleep 1; done
+            echo "Initializing replication from clone position"
+            mysql -u root \
                 -pgutsandgun \
-                -e "$(<change_master_to.sql.in), \
+                -e "$(</etc/mysql/conf.d/master.sql), \
                         MASTER_HOST='read-statefulset-0.read', \
                         MASTER_USER='root', \
                         MASTER_PASSWORD='gutsandgun', \
                         MASTER_CONNECT_RETRY=10; \
                       START SLAVE;" || exit 1 
+          fi
         ports:
         - name: read
           containerPort: 3306
@@ -85,7 +86,7 @@ spec:
         readinessProbe:
           exec:
             # Check we can execute queries over TCP (skip-networking is off).
-            command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1", "-pgutsandgun"]
+            command: ["mysql", "-u", "root", "-e", "SELECT 1", "-pgutsandgun"]
           initialDelaySeconds: 5
           periodSeconds: 2
           timeoutSeconds: 1
