@@ -81,7 +81,7 @@ spec:
                           MASTER_CONNECT_RETRY=10; \
                         START SLAVE;" || exit 1
           else
-            mysqldump -u root -p --all-databases > /etc/mysql/master/master.sql
+            mysqldump -u root -pgutsandgun --all-databases > /etc/mysql/master/master.sql
           fi
       volumes:
       - name: master
