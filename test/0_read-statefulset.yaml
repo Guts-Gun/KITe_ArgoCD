@@ -54,7 +54,7 @@ spec:
         - "-c"
         - |
           set -ex
-          cd /mnt/conf-2
+          cd /etc/mysql/conf.d
           if [[ /mnt/config-map/primary.cnf ]]; then
             echo "Create read db..."
             mysql -u root -pgutsandgun
@@ -94,7 +94,7 @@ spec:
           timeoutSeconds: 1
         volumeMounts:
         - name: conf
-          emptyDir: {}
+          mountPath: /mnt/conf.d
         - name: conf-2
           mountPath: /mnt/conf-2
         - name: config-map
