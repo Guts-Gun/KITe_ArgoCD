@@ -110,12 +110,12 @@ spec:
       - name: config-map
         configMap:
           name: read-config
-    volumeClaimTemplates:
-    - metadata:
-        name: data
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: nfs-storageclass
-        resources:
-          requests:
-            storage: 100Gi
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: nfs-storageclass
+      resources:
+        requests:
+          storage: 100Gi
