@@ -26,6 +26,27 @@ spec:
   - name: keycloak
     port: 12001
     protocol: TCP
+  - name: read
+    port: 12002
+    protocol: TCP
+  - name: user
+    port: 12003
+    protocol: TCP
+  - name: log
+    port: 12004
+    protocol: TCP
+  - name: request
+    port: 12005
+    protocol: TCP
+  - name: sending
+    port: 12006
+    protocol: TCP
+  - name: broker
+    port: 12007
+    protocol: TCP
+  - name: scheduler
+    port: 12008
+    protocol: TCP
   selector:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx
