@@ -24,6 +24,8 @@ spec:
         - "-c"
         - |
           set -ex
+          
+          mkdir -p /var/lib/mysql/read
           # Generate mysql server-id from pod ordinal index.
           [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
           ordinal=${BASH_REMATCH[1]}
@@ -50,10 +52,6 @@ spec:
         ports:
         - name: read
           containerPort: 3306
-        command:
-        - bash
-        - "-c"
-        - mkdir -p /var/lib/mysql/read
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
