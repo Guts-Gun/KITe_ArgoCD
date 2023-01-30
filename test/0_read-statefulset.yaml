@@ -50,7 +50,7 @@ spec:
             memory: 400m
           requests:
             cpu: 100m
-            memory: 100m
+            memory: 200m
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
