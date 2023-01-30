@@ -16,6 +16,9 @@ spec:
       initContainers:
       - name: init-read
         image: mariadb
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "gutsandgun"
         command:
         - bash
         - "-c"
@@ -94,7 +97,7 @@ spec:
         readinessProbe:
           exec:
             # Check we can execute queries over TCP (skip-networking is off).
-            command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1"]
+            command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1", "-p", "gutsandgun"]
           initialDelaySeconds: 5
           periodSeconds: 2
           timeoutSeconds: 1
@@ -135,7 +138,7 @@ spec:
                   -e "$(<change_master_to.sql.in), \
                           MASTER_HOST='read-statefulset-0.read', \
                           MASTER_USER='root', \
-                          MASTER_PASSWORD='', \
+                          MASTER_PASSWORD='gutsandgun', \
                           MASTER_CONNECT_RETRY=10; \
                         START SLAVE;" || exit 1
             # In case of container restart, attempt this at-most-once.
