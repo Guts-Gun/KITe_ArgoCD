@@ -163,8 +163,9 @@ spec:
           name: read-config
   volumeClaimTemplates:
   - metadata:
-      name: nfs-storageclass
+      name: data
     spec:
+      storageClassName: nfs-storageclass
       accessModes: ["ReadWriteOnce"]
       resources:
         requests:
