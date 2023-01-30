@@ -50,6 +50,10 @@ spec:
         ports:
         - name: read
           containerPort: 3306
+        command:
+        - bash
+        - "-c"
+        - mkdir /var/lib/mysql/read
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
