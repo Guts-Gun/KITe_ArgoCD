@@ -54,10 +54,8 @@ spec:
         - "-c"
         - |
           set -ex
-          cd /etc/mysql/conf.d
-          [[ `uname -n` =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
-          if [[ $ordinal -eq 0 ]]; then
+          cd /mnt/conf-2
+          if [[ /mnt/config-map/primary.cnf ]]; then
             echo "Create read db..."
             mysql -u root -pgutsandgun
             create database read; || exit 1
@@ -96,7 +94,7 @@ spec:
           timeoutSeconds: 1
         volumeMounts:
         - name: conf
-          mountPath: /mnt/conf.d
+          emptyDir: {}
         - name: conf-2
           mountPath: /mnt/conf-2
         - name: config-map
@@ -104,10 +102,6 @@ spec:
         - name: data
           mountPath: /var/lib/mysql
       volumes:
-      - name: conf # same as volumemouts name
-        nfs:
-          server: 172.30.1.100
-          path: /k8s/db_config/read/conf
       - name: conf-2 # same as volumemouts name
         nfs:
           server: 172.30.1.100
