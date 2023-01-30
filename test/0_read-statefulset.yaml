@@ -35,10 +35,7 @@ spec:
             cp /mnt/config-map/primary.cnf /mnt/conf.d/
           else
             cp /mnt/config-map/replica.cnf /mnt/conf.d/
-          fi          
-          mysql -u root -pgutsandgun
-          create database read;
-          exit 1
+          fi
         volumeMounts:
         - name: conf
           mountPath: /mnt/conf.d
@@ -149,6 +146,10 @@ spec:
           # Start a server to send backups when requested by peers.
           exec ncat --listen --keep-open --send-only --max-conns=1 3307 -c \
             "xtrabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root"          
+          
+          mysql -u root -pgutsandgun
+          create database read;
+          exit 1
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
