@@ -16,6 +16,9 @@ spec:
       initContainers:
       - name: init-read
         image: mariadb
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "gutsandgun"
         command:
         - bash
         - "-c"
@@ -33,6 +36,9 @@ spec:
           else
             cp /mnt/config-map/replica.cnf /mnt/conf.d/
           fi          
+          mysql -u root -pgutsandgun
+          create database read;
+          exit 1
         volumeMounts:
         - name: conf
           mountPath: /mnt/conf.d
@@ -91,7 +97,7 @@ spec:
         readinessProbe:
           exec:
             # Check we can execute queries over TCP (skip-networking is off).
-            command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1", "-pgutsandgun"]
+            command: ["mysql", "-u", "root", "-e", "SELECT 1", "-pgutsandgun"]
           initialDelaySeconds: 5
           periodSeconds: 2
           timeoutSeconds: 1
@@ -125,10 +131,10 @@ spec:
           # Check if we need to complete a clone by starting replication.
           if [[ -f change_master_to.sql.in ]]; then
             echo "Waiting for mysqld to be ready (accepting connections)"
-            until mysql -h 127.0.0.1 -e "SELECT 1" -pgutsandgun; do sleep 1; done
+            until mysql -u root -e "SELECT 1" -pgutsandgun; do sleep 1; done
 
             echo "Initializing replication from clone position"
-            mysql -h 127.0.0.1 \
+            mysql -u root \
                   -pgutsandgun \
                   -e "$(<change_master_to.sql.in), \
                           MASTER_HOST='read-0.read', \
