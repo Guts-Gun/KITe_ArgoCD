@@ -67,6 +67,7 @@ spec:
         - |
           set -ex
           
+          service mysql start
           echo "Waiting for mysqld to be ready (accepting connections)"
           until mysql -u root -e "SELECT 1" -pgutsandgun; do sleep 1; done
           if [[ -f /etc/mysql/conf.d/replica.cnf ]]; then
