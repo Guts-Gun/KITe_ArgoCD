@@ -27,20 +27,47 @@ spec:
           # Generate mysql server-id from pod ordinal index.
           [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
           ordinal=${BASH_REMATCH[1]}
-          echo [mysqld] > /etc/mysql/conf.d/server-id.cnf
+          echo [mysqld] > /mnt/conf.d/server-id.cnf
           # Add an offset to avoid reserved server-id=0 value.
-          echo server-id=$((100 + $ordinal)) >> /etc/mysql/conf.d/server-id.cnf
+          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
           # Copy appropriate conf.d files from config-map to emptyDir.
           if [[ $ordinal -eq 0 ]]; then
-            cp /mnt/config-map/primary.cnf /etc/mysql/conf.d
+            cp /mnt/config-map/primary.cnf /mnt/conf.d/
           else
-            cp /mnt/config-map/replica.cnf /etc/mysql/conf.d
-          fi
+            cp /mnt/config-map/replica.cnf /mnt/conf.d/
+          fi          
         volumeMounts:
+        - name: conf
+          mountPath: /mnt/conf.d
         - name: master
           mountPath: /etc/mysql/master
         - name: config-map
           mountPath: /mnt/config-map
+      - name: clone-mysql
+        image: gcr.io/google-samples/xtrabackup:1.0
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          # Skip the clone if data already exists.
+          [[ -d /var/lib/mysql/mysql ]] && exit 0
+          # Skip the clone on primary (ordinal index 0).
+          [[ `hostname` =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          [[ $ordinal -eq 0 ]] && exit 0
+          # Clone data from previous peer.
+          ncat --recv-only read-$(($ordinal-1)).read 3306 | xbstream -x -C /var/lib/mysql
+          # Prepare the backup.
+          xtrabackup --prepare --target-dir=/var/lib/mysql          
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+        - name: master
+          mountPath: /etc/mysql/master
       containers:
       - name: read
         image: mariadb
@@ -55,6 +82,8 @@ spec:
           mountPath: /var/lib/mysql
         - name: master
           mountPath: /etc/mysql/master
+        - name: conf
+          mountPath: /etc/mysql/conf.d
         resources:
           limits:
             memory: 2Gi
@@ -67,7 +96,6 @@ spec:
         - |
           set -ex
           
-          service mysql start
           echo "Waiting for mysqld to be ready (accepting connections)"
           until mysql -u root -e "SELECT 1" -pgutsandgun; do sleep 1; done
           if [[ -f /etc/mysql/conf.d/replica.cnf ]]; then
@@ -84,6 +112,8 @@ spec:
             mysqldump -u root -pgutsandgun --all-databases > /etc/mysql/master/master.sql
           fi
       volumes:
+      - name: conf
+        emptyDir: {}
       - name: master
         nfs:
           server: 172.30.1.100
