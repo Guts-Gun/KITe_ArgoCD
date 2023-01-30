@@ -15,7 +15,7 @@ spec:
     spec:
       initContainers:
       - name: init-read
-        image: mariadb
+        image: mariadb:10.5.9
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: "gutsandgun"
@@ -67,7 +67,7 @@ spec:
           mountPath: /etc/mysql/conf.d
       containers:
       - name: read
-        image: mariadb
+        image: mariadb:10.5.9
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: "gutsandgun"
@@ -143,7 +143,7 @@ spec:
 
           # Start a server to send backups when requested by peers.
           exec ncat --listen --keep-open --send-only --max-conns=1 3307 -c \
-            "mariabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root"          
+            "mariabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root -pgutsandgun"          
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
