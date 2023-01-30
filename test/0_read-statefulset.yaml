@@ -13,15 +13,12 @@ spec:
       labels:
         app: read
     spec:
-      containers:
-      - name: read
+      initContainers:
+      - name: init-read
         image: mariadb
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: "gutsandgun"
-        ports:
-        - name: read
-          containerPort: 3306
         command:
         - bash
         - "-c"
@@ -40,12 +37,24 @@ spec:
             cp /mnt/config-map/replica.cnf /etc/mysql/conf.d
           fi
         volumeMounts:
-        - name: data
-          mountPath: /var/lib/mysql
         - name: master
           mountPath: /etc/mysql/master
         - name: config-map
           mountPath: /mnt/config-map
+      containers:
+      - name: read
+        image: mariadb
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "gutsandgun"
+        ports:
+        - name: read
+          containerPort: 3306
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+        - name: master
+          mountPath: /etc/mysql/master
         resources:
           limits:
             memory: 2Gi
