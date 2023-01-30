@@ -15,7 +15,7 @@ spec:
     spec:
       initContainers:
       - name: init-read
-        image: mariadb
+        image: mysql:5.7
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: "gutsandgun"
@@ -66,7 +66,7 @@ spec:
           mountPath: /etc/mysql/conf.d
       containers:
       - name: read
-        image: mariadb
+        image: mysql:5.7
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: "gutsandgun"
