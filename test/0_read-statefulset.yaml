@@ -46,34 +46,6 @@ spec:
           mountPath: /var/lib/mysql
         - name: conf
           mountPath: /etc/mysql/conf.d
-      - name: clone-mysql
-        image: gcr.io/google-samples/xtrabackup:1.0
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          until mysql -u root -e "SELECT 1" -pgutsandgun; do sleep 1; done
-          # Skip the clone if data already exists.
-          if [[ $ordinal -eq 0 ]]; then
-            mysqldump -u root -pgutsandgun --all-databases > /etc/mysql/master/master.sql
-          else
-            mysql -u root \
-                  -pgutsandgun \
-                  -e "$(</etc/mysql/master/master.sql), \
-                          MASTER_HOST='read-statefulset-0', \
-                          MASTER_USER='root', \
-                          MASTER_PASSWORD='gutsandgun', \
-                          MASTER_CONNECT_RETRY=10; \
-                        START SLAVE;" || exit 1
-          fi        
-        volumeMounts:
-        - name: master
-          mountPath: /etc/mysql/master
-        - name: data
-          mountPath: /var/lib/mysql
-        - name: conf
-          mountPath: /etc/mysql/conf.d
       containers:
       - name: read
         image: mariadb
