@@ -61,6 +61,7 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
+          subPath: read
         - name: conf
           mountPath: /etc/mysql/conf.d
       containers:
@@ -75,6 +76,7 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
+          subPath: read
         - name: conf
           mountPath: /etc/mysql/conf.d
         resources:
@@ -148,6 +150,7 @@ spec:
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
+          subPath: read
         - name: conf
           mountPath: /etc/mysql/conf.d
         resources:
