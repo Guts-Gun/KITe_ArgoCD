@@ -65,6 +65,7 @@ spec:
         - bash
         - "-c"
         - |
+          set -ex
           if [[ -f /etc/mysql/conf.d/master.sql ]]; then
             echo "Waiting for mysqld to be ready (accepting connections)"
             until mysql -u root -e "SELECT 1" -pgutsandgun; do sleep 1; done
