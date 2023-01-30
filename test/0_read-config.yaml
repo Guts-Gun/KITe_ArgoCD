@@ -12,12 +12,7 @@ data:
     # Apply this config only on the primary.
     [mysqld]
     log-bin
-    gtid_mode=ON
-    enforce_gtid_consistency=ON
   replica.cnf: |
     # Apply this config only on replicas.
     [mysqld]
-    gtid_mode=ON
-    enforce_gtid_consistency=ON
     super-read-only
-    log_bin=OFF
