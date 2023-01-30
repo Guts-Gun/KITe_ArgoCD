@@ -66,16 +66,15 @@ spec:
         - "-c"
         - |
           set -ex
-          # Check if we need to complete a clone by starting replication.
+          
+          echo "Waiting for mysqld to be ready (accepting connections)"
+          until mysql -u root -e "SELECT 1" -pgutsandgun; do sleep 1; done
           if [[ -f /etc/mysql/conf.d/replica.cnf ]]; then
-            echo "Waiting for mysqld to be ready (accepting connections)"
-            until mysql -u root -e "SELECT 1" -pgutsandgun; do sleep 1; done
-
             echo "Initializing replication from clone position"
             mysql -u root \
                   -pgutsandgun \
                   -e "$(</etc/mysql/master/master.sql), \
-                          MASTER_HOST='read-0.read', \
+                          MASTER_HOST='read-statefulset-0', \
                           MASTER_USER='root', \
                           MASTER_PASSWORD='gutsandgun', \
                           MASTER_CONNECT_RETRY=10; \
