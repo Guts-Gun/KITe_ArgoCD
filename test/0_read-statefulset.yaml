@@ -7,18 +7,21 @@ spec:
     matchLabels:
       app: read
   serviceName: read-service
-  replicas: 3
+  replicas: 2
   template:
     metadata:
       labels:
         app: read
     spec:
-      initContainers:
-      - name: init-read
+      containers:
+      - name: read
         image: mariadb
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: "gutsandgun"
+        ports:
+        - name: read
+          containerPort: 3306
         command:
         - bash
         - "-c"
@@ -37,52 +40,12 @@ spec:
             cp /mnt/config-map/replica.cnf /etc/mysql/conf.d
           fi
         volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
         - name: master
           mountPath: /etc/mysql/master
         - name: config-map
           mountPath: /mnt/config-map
-      containers:
-      - name: run
-        image: bash:4.4
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/mysql
-        - name: master
-          mountPath: /etc/mysql/master
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          
-          echo "Waiting for mysqld to be ready (accepting connections)"
-          until mysql -u root -e "SELECT 1" -pgutsandgun; do sleep 1; done
-          if [[ -f /etc/mysql/conf.d/replica.cnf ]]; then
-            echo "Initializing replication from clone position"
-            mysql -u root \
-                  -pgutsandgun \
-                  -e "$(</etc/mysql/master/master.sql), \
-                          MASTER_HOST='read-statefulset-0', \
-                          MASTER_USER='root', \
-                          MASTER_PASSWORD='gutsandgun', \
-                          MASTER_CONNECT_RETRY=10; \
-                        START SLAVE;" || exit 1
-          else
-            mysqldump -u root -pgutsandgun --all-databases > /etc/mysql/master/master.sql
-          fi
-      - name: read
-        image: mariadb
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          value: "gutsandgun"
-        ports:
-        - name: read
-          containerPort: 3306
-        volumeMounts:
-        - name: data
-          mountPath: /var/lib/mysql
-        - name: master
-          mountPath: /etc/mysql/master
         resources:
           limits:
             memory: 2Gi
