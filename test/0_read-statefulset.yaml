@@ -54,6 +54,9 @@ spec:
           [[ `hostname` =~ -([0-9]+)$ ]] || exit 1
           ordinal=${BASH_REMATCH[1]}
           [[ $ordinal -eq 0 ]] && exit 0
+          
+          apt-get update -y
+          apt-get install ncat -y
           # Clone data from previous peer.
           ncat --recv-only read-statefulset-$(($ordinal-1)).read-service 3307 | mbstream -x -C /var/lib/mysql
           # Prepare the backup.
@@ -108,6 +111,10 @@ spec:
         - "-c"
         - |
           set -ex
+          
+          apt-get update -y
+          apt-get install ncat -y
+          
           cd /var/lib/mysql
 
           mkdir -p read
