@@ -34,18 +34,6 @@ spec:
           else
             cp /mnt/config-map/replica.cnf /mnt/conf.d/
           fi
-        - |
-          echo "Create read db..."
-          mysql -u root -pgutsandgun
-        - |
-          create database read;
-        - |
-          exit
-          echo "Create master dump file..."
-        - |
-          rm -rf /etc/mysql/conf.d/master.sql
-        - |
-          mysqldump -u root -pgutsandgun --all-databases > /etc/mysql/conf.d/master.sql
         volumeMounts:
         - name: conf
           mountPath: /mnt/conf.d
@@ -66,13 +54,24 @@ spec:
         - "-c"
         - |
           set -ex
-          if [[ -f /etc/mysql/conf.d/master.sql ]]; then
+          cd /etc/mysql/conf.d
+          [[ `uname -n` =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          if [[ $ordinal -eq 0 ]]; then
+            echo "Create read db..."
+            mysql -u root -pgutsandgun
+            create database read; || exit 1
+            echo "Create master dump file..."
+            rm -rf /etc/mysql/conf.d/master.sql
+            mysqldump -u root -pgutsandgun --all-databases > master.sql
+          fi
+          if [[ -f master.sql ]]; then
             echo "Waiting for mysqld to be ready (accepting connections)"
             until mysql -u root -e "SELECT 1" -pgutsandgun; do sleep 1; done
             echo "Initializing replication from clone position"
             mysql -u root \
                 -pgutsandgun \
-                -e "$(</etc/mysql/conf.d/master.sql), \
+                -e "$(<master.sql), \
                         MASTER_HOST='read-statefulset-0.read', \
                         MASTER_USER='root', \
                         MASTER_PASSWORD='gutsandgun', \
