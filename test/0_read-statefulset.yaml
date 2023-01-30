@@ -135,6 +135,7 @@ spec:
             until mysql -h 127.0.0.1 -e "SELECT 1" -pgutsandgun; do sleep 1; done
             echo "Initializing replication from clone position"
             mysql -h 127.0.0.1 \
+                  -pgutsandgun \
                   -e "$(<change_master_to.sql.in), \
                           MASTER_HOST='read-statefulset-0.read', \
                           MASTER_USER='root', \
