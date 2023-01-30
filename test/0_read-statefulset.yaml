@@ -58,7 +58,7 @@ spec:
           # Clone data from previous peer.
           ncat --recv-only read-statefulset-$(($ordinal-1)).read-service 3307 | mbstream -x -C /var/lib/mysql
           # Prepare the backup.
-          mariabackup --prepare --target-dir=/var/lib/mysql          
+          until mariabackup --prepare --target-dir=/var/lib/mysql; do sleep 1; done         
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
