@@ -35,8 +35,6 @@ spec:
             cp /mnt/config-map/replica.cnf /mnt/conf.d/
           fi
         volumeMounts:
-        - name: conf
-          mountPath: /mnt/conf.d
         - name: conf-2
           mountPath: /mnt/conf-2
         - name: config-map
@@ -93,8 +91,6 @@ spec:
           periodSeconds: 2
           timeoutSeconds: 1
         volumeMounts:
-        - name: conf
-          mountPath: /mnt/conf.d
         - name: conf-2
           mountPath: /mnt/conf-2
         - name: config-map
