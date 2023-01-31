@@ -1,17 +1,18 @@
 apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaConnector
 metadata:
-  name: elastic-source
+  name: elastic-sink
   namespace: kafka
   labels:
     strimzi.io/cluster: kafka-connect-cluster3
 spec:
-  name: elastic-source
+  name: elastic-sink
   config:
-    connector.class: com.github.dariobalinzo.ElasticSourceConnector
+    connector.class: io.confluent.connect.elasticsearch.ElasticsearchSinkConnector
     tasks.max: 1
-    es.host: elasticsearch-svc
-    es.port: 9200
-    index.prefix: logstash-
-    topic.prefix: es
-    incrementing.field.name: @timestamp
+    topics: fluentd-container-logging
+    topic.index.map: fluentd:fluentd_index
+    connection.url: kafka-cluster-kafka-brokers:9092
+    type.name: log
+    key.ignore: true
+    schema.ignore: true
