@@ -63,6 +63,10 @@ spec:
       containers:
       - name: fluentd
         image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch
+        command:
+        - bash
+        - "-c"
+        - rm -rf /fluentd/etc/systemd.conf
         env:
         - name:  FLUENT_ELASTICSEARCH_HOST
           value: elasticsearch-svc.monitoring.svc.cluster.local
