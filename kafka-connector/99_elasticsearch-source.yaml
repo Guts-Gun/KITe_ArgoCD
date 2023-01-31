@@ -6,9 +6,8 @@ metadata:
   labels:
     strimzi.io/cluster: kafka-connect-cluster3
 spec:
-  class: com.github.dariobalinzo.ElasticSourceConnector
-  tasksMax: 1
   config:
+    connector.class: com.github.dariobalinzo.ElasticSourceConnector
     tasks.max: 1
     es.host: elasticsearch-svc
     es.port: 9200
