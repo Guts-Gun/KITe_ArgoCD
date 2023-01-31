@@ -115,25 +115,13 @@ spec:
           mkdir -p read
           # Determine binlog position of cloned data, if any.
           if [[ -f xtrabackup_slave_info && "x$(<xtrabackup_slave_info)" != "x" ]]; then
-            master_log_pos=`mysql -h read-statefulset-0.read-service --port 3307 -uroot -e "show master status\G" | grep Position`
-            master_log_pos="${master_log_pos}"
-          
-            master_log_file=`mysql -h read-statefulset-0.read-service --port 3307 -uroot -e "show master status\G" | grep mysql-bin`
-            master_log_file="${master_log_file}"
-          
-            rm -f xtrabackup_binlog_info xtrabackup_slave_info
-            echo "CHANGE MASTER TO MASTER_LOG_FILE=$master_log_file,\
-                  MASTER_LOG_POS=$master_log_pos" > change_master_to.sql.in
+            cat xtrabackup_slave_info | sed -E 's/;$//g' > change_master_to.sql.in
+            rm -f xtrabackup_slave_info xtrabackup_binlog_info
           elif [[ -f xtrabackup_binlog_info ]]; then
-            master_log_pos=`mysql -h read-statefulset-0.read-service --port 3307 -uroot -e "show master status\G" | grep Position`
-            master_log_pos="${master_log_pos}"
-          
-            master_log_file=`mysql -h read-statefulset-0.read-service --port 3307 -uroot -e "show master status\G" | grep mysql-bin`
-            master_log_file="${master_log_file}"
-          
+            value=`cat xtrabackup_binlog_info`
             rm -f xtrabackup_binlog_info xtrabackup_slave_info
-            echo "CHANGE MASTER TO MASTER_LOG_FILE=$master_log_file,\
-                  MASTER_LOG_POS=$master_log_pos" > change_master_to.sql.in
+            echo "CHANGE MASTER TO MASTER_LOG_FILE=${value[0]},\
+                  MASTER_LOG_POS=${value[1]}" > change_master_to.sql.in
           fi
 
           if [[ -f change_master_to.sql.in ]]; then
