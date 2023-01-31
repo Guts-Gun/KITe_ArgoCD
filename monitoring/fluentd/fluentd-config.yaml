@@ -37,6 +37,13 @@ data:
       @type null
     </match>
     <source>
+      @type http
+      port 9880
+      bind 0.0.0.0
+      body_size_limit 32m
+      keepalive_timeout 10s
+    </source>
+    <source>
       @type tail
       @id in_tail_container_logs
       path "/var/log/containers/spring.log"
