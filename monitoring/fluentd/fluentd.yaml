@@ -62,14 +62,12 @@ spec:
         effect: NoSchedule
       containers:
       - name: fluentd
-        image: fluent/fluentd-kubernetes-daemonset:v1.15.3-debian-kafka-1.0
+        image: fluent/fluentd-kubernetes-daemonset:v1.15.3-debian-kafka2-1.0
         env:
         - name: FLUENT_KAFKA_BROKERS
           value: kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092
         - name: FLUENT_KAFKA_DEFAULT_TOPIC
           value: fluentd-container-logging
-        - name: FLUENT_KAFKA_MAX_SEND_RETRIES
-          value: "3"
         - name: FLUENT_KAFKA_COMPRESSION_CODEC
           value: "snappy"
         - name: FLUENT_KAFKA_MAX_SEND_LIMIT_BYTES
