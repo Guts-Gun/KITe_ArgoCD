@@ -11,7 +11,7 @@ spec:
     tasks.max: 1
     topics: fluentd-container-logging
     topic.index.map: fluentd:fluentd_index
-    connection.url: kafka-cluster-kafka-brokers:9092
+    connection.url: elasticsearch-svc:9200
     type.name: log
     key.ignore: true
     schema.ignore: true
