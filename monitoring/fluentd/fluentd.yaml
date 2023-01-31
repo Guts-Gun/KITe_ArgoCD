@@ -69,6 +69,7 @@ spec:
         - |
           set -ex
           cp -r /fluentd/etc /temp_fluentd
+          exit
         env:
         - name: FLUENT_KAFKA_BROKERS
           value: kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092
