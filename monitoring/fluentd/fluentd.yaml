@@ -69,7 +69,7 @@ spec:
         - |
           set -ex
           mkdir -p /temp_fluentd
-          cp /fluentd/etc /temp_fluentd
+          cp -r /fluentd/etc /temp_fluentd
         env:
         - name:  FLUENT_ELASTICSEARCH_HOST
           value: elasticsearch-svc.monitoring.svc.cluster.local
