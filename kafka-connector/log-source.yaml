@@ -12,10 +12,11 @@ spec:
     tasks.max: 1
     database.hostname: log-service.db.svc.cluster.local
     database.port: 3306
-    database.log: root
+    database.user: root
     database.password: gutsandgun
     database.server.id: 184054
     database.server.name: db
+    topic.prefix: write
     database.include.list: log
     # table.whitelist: log
     topic.creation.default.partitions: 1
