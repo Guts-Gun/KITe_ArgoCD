@@ -68,7 +68,7 @@ spec:
         - "-c"
         - |
           set -ex
-          rm -rf /fluentd/etc/systemd.conf
+          rm /fluentd/etc/systemd.conf
         env:
         - name:  FLUENT_ELASTICSEARCH_HOST
           value: elasticsearch-svc.monitoring.svc.cluster.local
