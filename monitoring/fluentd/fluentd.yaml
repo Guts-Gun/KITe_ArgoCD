@@ -75,8 +75,6 @@ spec:
             cpu: 100m
             memory: 200Mi
         volumeMounts:
-        - name: conf
-          mountPath: /fluentd/etc
         - name: varlog
           mountPath: /var/log
         - name: varlibdockercontainers
@@ -90,7 +88,3 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
-      - name: conf # same as volumemouts name
-        nfs:
-          server: 172.30.1.100
-          path: /k8s/fluentd
