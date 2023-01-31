@@ -9,7 +9,7 @@ metadata:
     # needing to call the Connect REST API directly
     strimzi.io/use-connector-resources: "true"
 spec:
-  image: lmslmsms0616/kafka-connect-jdbc
+  image: rnjsxorl3075/kafka-connect:1
   replicas: 1
   bootstrapServers: kafka-cluster-kafka-bootstrap:9092
   config:
