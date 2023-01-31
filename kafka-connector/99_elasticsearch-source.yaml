@@ -1,3 +1,17 @@
-
-             
-    
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: elastic-source
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: kafka-connect-cluster3
+spec:
+  name: elastic-source
+  config:
+    connector.class: com.github.dariobalinzo.ElasticSourceConnector
+    tasks.max: 1
+    es.host: elasticsearch-svc
+    es.port: 9200
+    index.prefix: logstash-
+    topic.prefix: es
+    incrementing.field.name: @timestamp
