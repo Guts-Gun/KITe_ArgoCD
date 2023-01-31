@@ -63,6 +63,13 @@ spec:
       containers:
       - name: fluentd
         image: fluent/fluentd-kubernetes-daemonset:v1-debian-elasticsearch
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          mkdir -p /temp_fluentd
+          cp /fluentd/etc /temp_fluentd
         env:
         - name:  FLUENT_ELASTICSEARCH_HOST
           value: elasticsearch-svc.monitoring.svc.cluster.local
@@ -79,7 +86,8 @@ spec:
         volumeMounts:
         - name: conf
           mountPath: /fluentd/etc
-          subPath: custom
+        - name: temp
+          mountPath: /temp_fluentd
         - name: varlog
           mountPath: /var/log
         - name: varlibdockercontainers
@@ -97,3 +105,7 @@ spec:
         nfs:
           server: 172.30.1.100
           path: /k8s/fluentd
+      - name: temp # same as volumemouts name
+        nfs:
+          server: 172.30.1.100
+          path: /k8s/temp
