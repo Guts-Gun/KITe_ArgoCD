@@ -16,7 +16,7 @@ spec:
     database.password: gutsandgun
     database.server.id: 184054
     database.server.name: db
-    topic.prefix: write
+    topic.prefix: request
     database.include.list: request
     # table.whitelist: request
     topic.creation.default.partitions: 1

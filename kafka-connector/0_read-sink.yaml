@@ -19,7 +19,7 @@ spec:
     delete.enabled: "true"
     pk.mode: "record_key"
     pk.fields: id
-    topics.regex: db.write.(.*)
+    topics.regex: db.(.*).(.*)
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: true
     value.converter: org.apache.kafka.connect.json.JsonConverter
