@@ -26,7 +26,7 @@ spec:
   - name: keycloak
     port: 12001
     protocol: TCP
-  - name: read
+  - name: only-read
     port: 12002
     protocol: TCP
   - name: user
@@ -46,6 +46,9 @@ spec:
     protocol: TCP
   - name: scheduler
     port: 12008
+    protocol: TCP
+  - name: read
+    port: 12010
     protocol: TCP
   selector:
     app.kubernetes.io/component: controller
