@@ -6,6 +6,7 @@ metadata:
   labels:
     strimzi.io/cluster: kafka-connect-cluster3
 spec:
+  name: elastic-sink
   config:
     connector.class: io.confluent.connect.elasticsearch.ElasticsearchSinkConnector
     tasks.max: 1
