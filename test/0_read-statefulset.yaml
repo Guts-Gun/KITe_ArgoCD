@@ -118,7 +118,8 @@ spec:
             cat xtrabackup_slave_info | sed -E 's/;$//g' > change_master_to.sql.in
             rm -f xtrabackup_slave_info xtrabackup_binlog_info
           elif [[ -f xtrabackup_binlog_info ]]; then
-            value=`cat xtrabackup_binlog_info`
+            string=`cat xtrabackup_binlog_info`
+            value=(${string})
             rm -f xtrabackup_binlog_info xtrabackup_slave_info
             echo "CHANGE MASTER TO MASTER_LOG_FILE=${value[0]},\
                   MASTER_LOG_POS=${value[1]}" > change_master_to.sql.in
