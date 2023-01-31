@@ -65,7 +65,7 @@ spec:
         image: 1223yys/fluentd-kafka:latest
         env:
         - name: FLUENT_KAFKA_BROKERS
-          value: kafka-cluster-kafka-bootstrap:9092
+          value: kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092
         - name: FLUENT_KAFKA_DEFAULT_TOPIC
           value: fluentd-container-logging
         - name: FLUENT_KAFKA_OUTPUT_DATA_TYPE
