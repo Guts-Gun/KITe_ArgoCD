@@ -12,6 +12,6 @@ spec:
     topics: fluentd-container-logging
     topic.index.map: fluentd-container-logging:fluentd_index
     connection.url: http://elasticsearch-svc.monitoring.svc.cluster.local:9200
-    type.name: logs
+    type.name: log
     key.ignore: true
     schema.ignore: true
