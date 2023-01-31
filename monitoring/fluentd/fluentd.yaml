@@ -62,25 +62,21 @@ spec:
         effect: NoSchedule
       containers:
       - name: fluentd
-        image: 1223yys/fluentd-kafka:latest
+        image: exotelorg/fluentd-kafka:1.1.45
         env:
         - name: FLUENT_KAFKA_BROKERS
           value: kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092
         - name: FLUENT_KAFKA_DEFAULT_TOPIC
           value: fluentd-container-logging
-        - name: FLUENT_KAFKA_OUTPUT_DATA_TYPE
-          value: json
-        - name: FLUENT_KAFKA_COMPRESSION_CODEC
-          value: snappy
-        - name: FLUENT_KAFKA_MAX_SEND_LIMIT_BYTES
-          value: "4096"
         resources:
           limits:
-            memory: 1Gi
+            memory: 400Mi
           requests:
             cpu: 100m
-            memory: 400Mi
+            memory: 200Mi
         volumeMounts:
+        - name: conf
+          mountPath: /fluentd/etc
         - name: varlog
           mountPath: /var/log
         - name: varlibdockercontainers
@@ -94,3 +90,7 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
+      - name: conf # same as volumemouts name
+        nfs:
+          server: 172.30.1.100
+          path: /k8s/fluentd
