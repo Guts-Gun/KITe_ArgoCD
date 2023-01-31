@@ -121,7 +121,7 @@ spec:
             string=`cat xtrabackup_binlog_info`
             value=(${string})
             rm -f xtrabackup_binlog_info xtrabackup_slave_info
-            echo "CHANGE MASTER TO MASTER_LOG_FILE=${value[0]},\
+            echo "CHANGE MASTER TO MASTER_LOG_FILE='${value[0]}',\
                   MASTER_LOG_POS=${value[1]}" > change_master_to.sql.in
           fi
 
