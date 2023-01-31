@@ -83,7 +83,7 @@ spec:
           mountPath: /var/lib/docker/containers
           readOnly: true
         - name: conf
-          mountPath: /fluentd/etc/
+          mountPath: /fluentd/etc
           subPath: custom
       terminationGracePeriodSeconds: 30
       volumes:
