@@ -89,8 +89,6 @@ spec:
         volumeMounts:
         - name: conf2
           mountPath: /temp_fluentd
-        - name: conf
-          mountPath: /fluentd/etc
         - name: varlog
           mountPath: /var/log
         - name: varlibdockercontainers
@@ -104,10 +102,6 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
-      - name: conf # same as volumemouts name
-        nfs:
-          server: 172.30.1.100
-          path: /k8s/fluentd
       - name: conf2 # same as volumemouts name
         nfs:
           server: 172.30.1.100
