@@ -63,13 +63,6 @@ spec:
       containers:
       - name: fluentd
         image: fluent/fluentd-kubernetes-daemonset:v1.15.3-debian-kafka-1.0
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          cp -r /fluentd/etc /temp_fluentd
-          exit
         env:
         - name: FLUENT_KAFKA_BROKERS
           value: kafka-cluster-kafka-brokers.kafka.svc.cluster.local:9092
@@ -88,8 +81,8 @@ spec:
             cpu: 100m
             memory: 200Mi
         volumeMounts:
-        - name: conf2
-          mountPath: /temp_fluentd
+        - name: conf
+          mountPath: /fluentd/etc
         - name: varlog
           mountPath: /var/log
         - name: varlibdockercontainers
@@ -103,7 +96,7 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
-      - name: conf2 # same as volumemouts name
+      - name: conf # same as volumemouts name
         nfs:
           server: 172.30.1.100
-          path: /k8s/temp
+          path: /k8s/fluentd
