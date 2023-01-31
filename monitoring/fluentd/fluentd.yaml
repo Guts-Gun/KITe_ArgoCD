@@ -68,7 +68,6 @@ spec:
         - "-c"
         - |
           set -ex
-          mkdir -p /temp_fluentd
           cp -r /fluentd/etc /temp_fluentd
         env:
         - name:  FLUENT_ELASTICSEARCH_HOST
@@ -84,8 +83,6 @@ spec:
             cpu: 100m
             memory: 200Mi
         volumeMounts:
-        - name: conf
-          mountPath: /fluentd/etc
         - name: temp
           mountPath: /temp_fluentd
         - name: varlog
@@ -101,10 +98,6 @@ spec:
       - name: varlibdockercontainers
         hostPath:
           path: /var/lib/docker/containers
-      - name: conf # same as volumemouts name
-        nfs:
-          server: 172.30.1.100
-          path: /k8s/fluentd
       - name: temp # same as volumemouts name
         nfs:
           server: 172.30.1.100
