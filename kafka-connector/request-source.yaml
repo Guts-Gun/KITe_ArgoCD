@@ -19,8 +19,8 @@ spec:
     topic.prefix: write
     database.include.list: request
     # table.whitelist: request
-    topic.creation.default.partitions: 1
-    topic.creation.default.replication.factor: 1
+    topic.creation.default.partitions: 3
+    topic.creation.default.replication.factor: 3
     database.allowPublicKeyRetrieval: true
     database.history.kafka.bootstrap.servers: kafka-cluster-kafka-bootstrap:9092
     database.history.kafka.topic: dbhistory.request
