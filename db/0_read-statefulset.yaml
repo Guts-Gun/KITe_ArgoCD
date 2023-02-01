@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: read
-  serviceName: read-service
+  serviceName: only-read-service
   replicas: 3
   template:
     metadata:
