@@ -4,7 +4,7 @@ metadata:
   name: read-service
 spec:
   type: ExternalName
-  externalName: read-statefulset-0
+  externalName: read-statefulset-0.only-read-service.db.svc.cluster.local
 ---
 # Client service for connecting to any MySQL instance for reads.
 # For writes, you must instead connect to the primary: mysql-0.mysql.
