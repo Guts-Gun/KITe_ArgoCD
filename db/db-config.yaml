@@ -6,7 +6,7 @@ data:
   master.cnf: |
     [mariadb]
     log-bin
-    binlog_format = ROW
+    binlog_format = row
     
 ---
 
