@@ -2,9 +2,15 @@ apiVersion: v1
 kind: Service
 metadata:
   name: read-service
+  labels:
+    app: read
 spec:
-  type: ExternalName
-  externalName: only-read-service.db.svc.cluster.local
+  ports:
+  - name: read-statefulset
+    port: 3306
+  clusterIP: None
+  selector:
+    statefulset.kubernetes.io/pod-name: read-statefulset-0
 ---
 # Client service for connecting to any MySQL instance for reads.
 # For writes, you must instead connect to the primary: mysql-0.mysql.
