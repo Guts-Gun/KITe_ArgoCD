@@ -6,6 +6,7 @@ data:
   master.cnf: |
     [mysqld]
     log-bin
+    binlog_format = ROW
     
 ---
 
