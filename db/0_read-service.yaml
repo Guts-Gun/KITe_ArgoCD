@@ -8,6 +8,7 @@ spec:
   ports:
   - name: read-statefulset
     port: 3306
+  type: ClusterIP
   clusterIP: None
   selector:
     app: read
