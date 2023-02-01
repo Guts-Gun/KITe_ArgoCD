@@ -11,4 +11,4 @@ data:
   12006: db/sending-service:3306
   12007: db/broker-service:3306
   12008: db/scheduler-service:3306
-  12010: db/read-service:3306
+  12010: db/read-statefulset-0.read-service:3306
