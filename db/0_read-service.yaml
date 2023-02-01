@@ -2,29 +2,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: read-service
-  labels:
-    app: read
 spec:
-  ports:
-  - name: read-statefulset
-    port: 3306
-  clusterIP: None
-  selector:
-    app: read
----
-apiVersion: v1
-kind: Endpoints
-metadata:
-  name: read-service
-  labels:
-    app: read
-subsets:
-  - addresses:
-      - ip: 10.244.1.30
-    ports:
-      - name: read-statefulset
-        port: 3306
-        protocol: TCP
+  type: ExternalName
+  externalName: read-statefulset-0.only-read-service.svc.cluster.local
 ---
 # Client service for connecting to any MySQL instance for reads.
 # For writes, you must instead connect to the primary: mysql-0.mysql.
