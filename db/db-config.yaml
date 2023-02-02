@@ -7,6 +7,7 @@ data:
     [mariadb]
     log-bin
     binlog_format = ROW
+    default-time-zone='+9:00'
     
 ---
 
@@ -18,3 +19,4 @@ data:
   slave.cnf: |
     [mariadb]
     super-read-only
+    default-time-zone='+9:00'

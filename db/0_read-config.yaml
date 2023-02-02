@@ -9,7 +9,9 @@ data:
     # Apply this config only on the primary.
     [mariadb]
     log-bin
+    default-time-zone='+9:00'
   replica.cnf: |
     # Apply this config only on replicas.
     [mariadb]
     read-only
+    default-time-zone='+9:00'
