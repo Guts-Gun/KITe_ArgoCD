@@ -15,3 +15,14 @@ spec:
     type.name: log
     key.ignore: true
     schema.ignore: true
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: true
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: true
+    
+    transforms: unwrap, route
+    transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
+    transforms.unwrap.drop.tombstones: false
+    transforms.route.type: org.apache.kafka.connect.transforms.RegexRouter
+    transforms.route.regex: "([^.]+)\\.([^.]+)\\.([^.]+)"
+    transforms.route.replacement: $3
