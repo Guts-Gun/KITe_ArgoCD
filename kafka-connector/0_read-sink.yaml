@@ -24,15 +24,15 @@ spec:
     value.converter: org.apache.kafka.connect.json.JsonConverter
     value.converter.schemas.enable: true
 
-    transforms: unwrap, route, TimestampConverter
+    transforms: unwrap, route, ConvertTimestamp
     transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
     transforms.unwrap.drop.tombstones: false
     transforms.route.type: org.apache.kafka.connect.transforms.RegexRouter
     transforms.route.regex: "([^.]+)\\.([^.]+)\\.([^.]+)"
     transforms.route.replacement: $3
-    transforms.TimestampConverter.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
-    transforms.TimestampConverter.target.type: Timestamp
-    transforms.TimestampConverter.field: mod_dt, reg_dt
-    transforms.TimestampConverter.format: "yyyy-MM-dd HH:mm:ss"
+    transforms.ConvertTimestamp.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
+    transforms.ConvertTimestamp.target.type: Timestamp
+    transforms.ConvertTimestamp.field: mod_dt, reg_dt
+    transforms.ConvertTimestamp.format: "yyyy-MM-dd HH:mm:ss"
     
     timestampPartitionFieldName: mod_dt, reg_dt
