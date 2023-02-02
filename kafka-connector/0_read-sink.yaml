@@ -33,9 +33,9 @@ spec:
     
     transforms.moddt.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
     transforms.moddt.field: mod_dt
-    transforms.moddt.target.type: unix
+    transforms.moddt.target.type: string
     
     transforms.regdt.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
     transforms.regdt.field: reg_dt
-    transforms.regdt.target.type: unix
+    transforms.regdt.target.type: string
     
