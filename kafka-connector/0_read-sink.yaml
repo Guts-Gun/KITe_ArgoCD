@@ -33,7 +33,7 @@ spec:
     transforms.route.replacement: $3
     
     transforms.RenameField.type: org.apache.kafka.connect.transforms.ReplaceField$Value
-    transforms.RenameField.blacklist: mod_dt, reg_dt
+    transforms.RenameField.blacklist: mod_dt
     
     transforms.InsertField.type: org.apache.kafka.connect.transforms.InsertField$Value
     transforms.InsertField.timestamp.field: mod_dt, reg_dt
