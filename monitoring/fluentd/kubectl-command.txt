@@ -1,4 +1,4 @@
-kubectl -n kafka exec kafka-connect-cluster3-connect-7bb4cdc784-lr2xw -- /opt/kafka/bin/kafka-topics.sh \
+kubectl -n kafka exec kafka-cluster-kafka-0 -- /opt/kafka/bin/kafka-topics.sh \
 --bootstrap-server kafka-cluster-kafka-bootstrap:9092 \
 --topic fluentd-container-logging \
 --create --partitions 3 --replication-factor 3
