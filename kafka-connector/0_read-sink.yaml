@@ -33,4 +33,4 @@ spec:
     transforms.tsConverter.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
     transforms.tsConverter.target.type: string
     transforms.tsConverter.field: mod_dt
-    transforms.tsConverter.format: "yyyy-MM-dd"
+    transforms.tsConverter.format: "yyyy-MM-dd hh:mm:ss"
