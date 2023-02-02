@@ -110,8 +110,12 @@ spec:
         - |
           set -ex
           
+          mariadb -u root -pgutsandgun
+          SET GLOBAL time_zone='Asia/Seoul';
+          SET time_zone = 'Asia/Seoul';
+          exit
+          
           cd /var/lib/mysql
-
           mkdir -p read
           # Determine binlog position of cloned data, if any.
           if [[ -f xtrabackup_slave_info && "x$(<xtrabackup_slave_info)" != "x" ]]; then
