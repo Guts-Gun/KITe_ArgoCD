@@ -36,6 +36,6 @@ spec:
     transforms.moddt.format: "yyyy-MM-dd hh:mm:ss"
     transforms.regdt.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
     transforms.regdt.target.type: string
-    transforms.regdt.field: mod_dt
+    transforms.regdt.field: reg_dt
     transforms.regdt.format: "yyyy-MM-dd hh:mm:ss"
     
