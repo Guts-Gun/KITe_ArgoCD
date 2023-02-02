@@ -18,7 +18,6 @@ spec:
     tombstones.on.delete: "true"
     delete.enabled: "true"
     pk.mode: "record_key"
-    pk.fields: id
     topics.regex: write.(.*)
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: true
