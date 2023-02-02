@@ -33,5 +33,5 @@ spec:
     transforms.route.replacement: $3
     
     transforms.ReplaceField.type: org.apache.kafka.connect.transforms.ReplaceField$Value
-    transforms.ReplaceField.blacklist: mod_dt
+    transforms.ReplaceField.blacklist: mod_dt, reg_dt
     
