@@ -23,6 +23,7 @@ spec:
     key.converter.schemas.enable: true
     value.converter: org.apache.kafka.connect.json.JsonConverter
     value.converter.schemas.enable: true
+    db.timezone: Asia/Seoul
 
     transforms: unwrap, route, moddt, regdt
     transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
