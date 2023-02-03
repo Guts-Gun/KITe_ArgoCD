@@ -33,5 +33,5 @@ spec:
     transforms.route.replacement: $3
     
     converters: timestampConverter
-    timestampConverter.type": oryanmoshe.kafka.connect.util.TimestampConverter
+    timestampConverter.type: oryanmoshe.kafka.connect.util.TimestampConverter
     timestampConverter.format.datetime: "YYYY-MM-dd HH:mm:ss"
