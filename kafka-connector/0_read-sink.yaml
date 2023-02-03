@@ -34,10 +34,10 @@ spec:
     
     transforms.moddt.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
     transforms.moddt.format: "yyyy-MM-dd hh:mm:ss"
-    transforms.moddt.target.type: string
+    transforms.moddt.target.type: unix
     transforms.moddt.field: mod_dt
     
     transforms.regdt.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
     transforms.regdt.format: "yyyy-MM-dd hh:mm:ss"
-    transforms.regdt.target.type: string
+    transforms.regdt.target.type: unix
     transforms.regdt.field: reg_dt
