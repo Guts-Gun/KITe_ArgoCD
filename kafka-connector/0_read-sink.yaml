@@ -32,3 +32,12 @@ spec:
     transforms.route.regex: "([^.]+)\\.([^.]+)\\.([^.]+)"
     transforms.route.replacement: $3
     
+    transforms.moddt.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
+    transforms.moddt.format: "yyyy-MM-dd hh:mm:ss.SSSSSS"
+    transforms.moddt.target.type: string
+    transforms.moddt.field: mod_dt
+    
+    transforms.regdt.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
+    transforms.regdt.format: "yyyy-MM-dd hh:mm:ss"
+    transforms.regdt.target.type: string
+    transforms.regdt.field: reg_dt
