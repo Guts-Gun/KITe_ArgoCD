@@ -32,8 +32,6 @@ spec:
     transforms.route.regex: "([^.]+)\\.([^.]+)\\.([^.]+)"
     transforms.route.replacement: $3
     
-    transforms.RenameField.type: org.apache.kafka.connect.transforms.ReplaceField$Value
-    transforms.RenameField.blacklist: mod_dt
-    
-    transforms.InsertField.type: org.apache.kafka.connect.transforms.InsertField$Value
-    transforms.InsertField.timestamp.field: mod_dt, reg_dt
+    converters: timestampConverter
+    timestampConverter.type": oryanmoshe.kafka.connect.util.TimestampConverter
+    timestampConverter.format.datetime: "YYYY-MM-dd HH:mm:ss"
