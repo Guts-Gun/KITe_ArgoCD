@@ -25,13 +25,19 @@ spec:
     value.converter.schemas.enable: true
     db.timezone: Asia/Seoul
 
-    transforms: unwrap, route, RenameField, InsertField
+    transforms: unwrap, route, moddt, regdt
     transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
     transforms.unwrap.drop.tombstones: false
     transforms.route.type: org.apache.kafka.connect.transforms.RegexRouter
     transforms.route.regex: "([^.]+)\\.([^.]+)\\.([^.]+)"
     transforms.route.replacement: $3
     
-    converters: timestampConverter
-    timestampConverter.type: oryanmoshe.kafka.connect.util.TimestampConverter
-    timestampConverter.format.datetime: "YYYY-MM-dd HH:mm:ss"
+    transforms.moddt.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
+    transforms.moddt.format: "yyyy-MM-dd hh:mm:ss"
+    transforms.moddt.target.type: string
+    transforms.moddt.field: mod_dt
+    
+    transforms.regdt.type: org.apache.kafka.connect.transforms.TimestampConverter$Value
+    transforms.regdt.format: "yyyy-MM-dd hh:mm:ss"
+    transforms.regdt.target.type: string
+    transforms.regdt.field: reg_dt
