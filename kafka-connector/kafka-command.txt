@@ -1,0 +1,4 @@
+kubectl exec -n kafka kafka-cluster-kafka-0 -- curl -X POST "http://kafka-connect-cluster3-connect-api:8083/connectors/read-sink/restart"
+
+
+kubectl exec -n kafka kafka-cluster-kafka-0 -- curl -X GET "http://kafka-connect-cluster3-connect-api:8083/connectors/read-sink/status"
