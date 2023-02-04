@@ -6,7 +6,7 @@ metadata:
 spec:
   kafka:
     version: 3.3.2
-    replicas: 3
+    replicas: 1
     listeners:
       - name: plain
         port: 9092
@@ -19,7 +19,7 @@ spec:
     storage:
       type: ephemeral
   zookeeper:
-    replicas: 3
+    replicas: 1
     storage:
       type: ephemeral
     config:
