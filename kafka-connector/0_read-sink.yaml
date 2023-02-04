@@ -25,7 +25,7 @@ spec:
     value.converter.schemas.enable: true
     db.timezone: Asia/Seoul
 
-    transforms: unwrap, route, moddt, regdt
+    transforms: unwrap, route
     transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
     transforms.unwrap.drop.tombstones: false
     transforms.route.type: org.apache.kafka.connect.transforms.RegexRouter
