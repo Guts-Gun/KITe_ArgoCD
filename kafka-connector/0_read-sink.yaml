@@ -13,7 +13,7 @@ spec:
     connection.user: "root"
     connection.password: "gutsandgun"
     auto.create: false
-    auto.evolve: true
+    auto.evolve: false
     insert.mode: "upsert"
     tombstones.on.delete: "true"
     delete.enabled: "true"
