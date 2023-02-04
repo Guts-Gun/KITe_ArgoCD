@@ -1,0 +1,33 @@
+apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaConnector
+metadata:
+  name: read-sink
+  namespace: kafka
+  labels:
+    strimzi.io/cluster: kafka-connect-cluster3
+spec:
+  class: io.confluent.connect.jdbc.JdbcSinkConnector
+  tasksMax: 1
+  config:
+    connection.url: "jdbc:mysql://read-statefulset-0.only-read-service.db.svc.cluster.local:3306/read"
+    connection.user: "root"
+    connection.password: "gutsandgun"
+    auto.create: false
+    auto.evolve: true
+    insert.mode: "upsert"
+    tombstones.on.delete: "true"
+    delete.enabled: "true"
+    pk.mode: "record_key"
+    topics.regex: write.request.(.*)
+    key.converter: org.apache.kafka.connect.json.JsonConverter
+    key.converter.schemas.enable: true
+    value.converter: org.apache.kafka.connect.json.JsonConverter
+    value.converter.schemas.enable: true
+    db.timezone: Asia/Seoul
+
+    transforms: unwrap, route
+    transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
+    transforms.unwrap.drop.tombstones: false
+    transforms.route.type: org.apache.kafka.connect.transforms.RegexRouter
+    transforms.route.regex: "([^.]+)\\.([^.]+)\\.([^.]+)"
+    transforms.route.replacement: $3
