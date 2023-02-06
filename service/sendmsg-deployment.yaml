@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sendmsg-deployment
+  labels:
+    app: sendmsg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sendmsg
+  template:
+    metadata:
+      labels:
+        app: sendmsg
+    spec:
+      containers:
+      - name: sendmsg
+        image: rnjsxorl3075/kite_sendmsg:7
+        ports:
+        - containerPort: 8021
+        imagePullPolicy: Always

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sendemail-deployment
+  labels:
+    app: sendemail
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sendemail
+  template:
+    metadata:
+      labels:
+        app: sendemail
+    spec:
+      containers:
+      - name: sendemail
+        image: rnjsxorl3075/kite_sendemail:7
+        ports:
+        - containerPort: 8022
+        imagePullPolicy: Always

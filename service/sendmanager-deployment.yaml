@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sendmanager-deployment
+  labels:
+    app: sendmanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sendmanager
+  template:
+    metadata:
+      labels:
+        app: sendmanager
+    spec:
+      containers:
+      - name: sendmanager
+        image: rnjsxorl3075/kite_sendmanager:7
+        ports:
+        - containerPort: 8004
+        imagePullPolicy: Always

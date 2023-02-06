@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: requestmsg-deployment
+  labels:
+    app: requestmsg
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: requestmsg
+  template:
+    metadata:
+      labels:
+        app: requestmsg
+    spec:
+      containers:
+      - name: requestmsg
+        image: rnjsxorl3075/kite_requestmsg:7
+        ports:
+        - containerPort: 8011
+        imagePullPolicy: Always

@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: brokermanager-deployment
+  labels:
+    app: brokermanager
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: brokermanager
+  template:
+    metadata:
+      labels:
+        app: brokermanager
+    spec:
+      containers:
+      - name: brokermanager
+        image: rnjsxorl3075/kite_brokermanager:7
+        ports:
+        - containerPort: 8005
+        imagePullPolicy: Always
