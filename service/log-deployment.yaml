@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: log
-        image: rnjsxorl3075/kite_log:7
+        image: rnjsxorl3075/kite_log:1
         ports:
         - containerPort: 8006
         imagePullPolicy: Always
