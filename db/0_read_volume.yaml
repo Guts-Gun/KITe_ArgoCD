@@ -21,7 +21,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - yjhome-server
+                - worker1
     
 ---
 
@@ -48,7 +48,7 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - yjhome-server
+                - worker2
     
 ---
 
@@ -75,4 +75,4 @@ spec:
             - key: kubernetes.io/hostname
               operator: In
               values:
-                - yjhome-server
+                - worker3
