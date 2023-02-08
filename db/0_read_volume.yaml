@@ -1,0 +1,54 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: read-pv-0
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+  - ReadWriteOnce
+  claimRef:
+    namespace: db
+    name: data-read-statefulset-0
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storageclass
+  local:
+    path: /home/worker/k8s
+    
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: read-pv-1
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+  - ReadWriteOnce
+  claimRef:
+    namespace: db
+    name: data-read-statefulset-1
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storageclass
+  local:
+    path: /home/worker/k8s
+    
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: read-pv-2
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+  - ReadWriteOnce
+  claimRef:
+    namespace: db
+    name: data-read-statefulset-2
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storageclass
+  local:
+    path: /home/worker/k8s
