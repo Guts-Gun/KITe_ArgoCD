@@ -30,9 +30,8 @@ spec:
           mountPath: /etc/mysql/conf.d
       volumes:
        - name: log-pvc # same as volumemouts name
-         nfs:
-           server: 172.30.1.100
-           path: /k8s/db_set/log
+         hostPath:
+           path: /home/worker/k8s/db_set/log
        - name: config
          configMap:
            name: master.cnf
