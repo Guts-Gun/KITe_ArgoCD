@@ -14,15 +14,9 @@ spec:
       labels:
         app: nfs-pod-provisioner
     spec:
-      affinity:
-        nodeAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-            nodeSelectorTerms:
-            - matchExpressions:
-              - key: aurochsapp
-                operator: In
-                values:
-                - yjhome-server
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
       serviceAccountName: nfs-pod-provisioner-sa # name of service account
       containers:
         - name: nfs-pod-provisioner
