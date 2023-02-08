@@ -1,4 +1,4 @@
-kind: Deployment
+kind: Statefulset
 apiVersion: apps/v1
 metadata:
   name: nfs-pod-provisioner
