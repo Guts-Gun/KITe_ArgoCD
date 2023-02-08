@@ -14,6 +14,14 @@ spec:
   storageClassName: local-storageclass
   local:
     path: /home/worker/k8s
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - yjhome-server
     
 ---
 
@@ -33,6 +41,14 @@ spec:
   storageClassName: local-storageclass
   local:
     path: /home/worker/k8s
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - yjhome-server
     
 ---
 
@@ -52,3 +68,11 @@ spec:
   storageClassName: local-storageclass
   local:
     path: /home/worker/k8s
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - yjhome-server
