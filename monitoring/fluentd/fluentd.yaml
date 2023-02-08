@@ -91,6 +91,5 @@ spec:
         hostPath:
           path: /var/lib/docker/containers
       - name: conf # same as volumemouts name
-        nfs:
-          server: 172.30.1.100
-          path: /k8s/fluentd
+        hostPath:
+          path: /home/worker/k8s/fluentd
