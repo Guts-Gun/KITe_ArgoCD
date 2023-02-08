@@ -16,10 +16,10 @@ spec:
     spec:
       affinity:
         nodeAffinity:
-          required:
+          requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
             - matchExpressions:
-              - key: kubernetes.io/hostname
+              - key: aurochsapp
                 operator: In
                 values:
                 - yjhome-server
