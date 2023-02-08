@@ -3,6 +3,14 @@ apiVersion: apps/v1
 metadata:
   name: nfs-pod-provisioner
 spec:
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - yjhome-server
   selector:
     matchLabels:
       app: nfs-pod-provisioner
