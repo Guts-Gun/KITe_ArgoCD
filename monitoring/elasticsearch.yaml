@@ -33,10 +33,9 @@ spec:
         - name: elastic-pvc
           mountPath: /usr/share/elasticsearch/data
       volumes:
-       - name: elastic-pvc # same as volumemouts name
-         nfs:
-           server: 172.30.1.100
-           path: /k8s/elastic
+      - name: elastic-pvc # same as volumemouts name
+        hostPath:
+          path: /home/worker/k8s/elastic
 ---
 apiVersion: v1
 kind: Service
