@@ -168,4 +168,4 @@ spec:
       storageClassName: nfs-storageclass
       resources:
         requests:
-          storage: 40Gi
+          storage: 100Gi
