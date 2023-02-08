@@ -1,16 +1,8 @@
-kind: StatefulSet
+kind: Deployment
 apiVersion: apps/v1
 metadata:
   name: nfs-pod-provisioner
 spec:
-  nodeAffinity:
-    required:
-      nodeSelectorTerms:
-        - matchExpressions:
-            - key: kubernetes.io/hostname
-              operator: In
-              values:
-                - yjhome-server
   selector:
     matchLabels:
       app: nfs-pod-provisioner
@@ -22,6 +14,15 @@ spec:
       labels:
         app: nfs-pod-provisioner
     spec:
+      affinity:
+        nodeAffinity:
+          required:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - yjhome-server
       serviceAccountName: nfs-pod-provisioner-sa # name of service account
       containers:
         - name: nfs-pod-provisioner
