@@ -4,7 +4,7 @@ metadata:
   name: read-pv-0
 spec:
   capacity:
-    storage: 100Gi
+    storage: 40Gi
   accessModes:
   - ReadWriteOnce
   claimRef:
@@ -31,7 +31,7 @@ metadata:
   name: read-pv-1
 spec:
   capacity:
-    storage: 100Gi
+    storage: 40Gi
   accessModes:
   - ReadWriteOnce
   claimRef:
@@ -58,7 +58,7 @@ metadata:
   name: read-pv-2
 spec:
   capacity:
-    storage: 100Gi
+    storage: 40Gi
   accessModes:
   - ReadWriteOnce
   claimRef:
