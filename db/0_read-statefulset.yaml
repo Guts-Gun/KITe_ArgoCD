@@ -13,6 +13,9 @@ spec:
       labels:
         app: read
     spec:
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
       initContainers:
       - name: init-read
         image: mariadb:10.5.9
