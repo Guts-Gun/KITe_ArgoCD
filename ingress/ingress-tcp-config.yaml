@@ -12,4 +12,3 @@ data:
   12007: db/broker-service:3306
   12008: db/scheduler-service:3306
   12010: db/read-service:3306
-  9092: kafka/kafka-cluster-kafka-brokers:9092

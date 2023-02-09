@@ -23,7 +23,6 @@ metadata:
       name: kafka-cluster
       uid: 73bcbdeb-825a-4297-9641-a2313475e5c7
 spec:
-  clusterIP: None
   ports:
     - name: tcp-ctrlplane
       port: 9090
