@@ -30,6 +30,3 @@ spec:
     transforms.unwrap.type: io.debezium.transforms.ExtractNewRecordState
     transforms.unwrap.drop.tombstones: false
     
-    transforms.route.type: org.apache.kafka.connect.transforms.RegexRouter
-    transforms.route.regex: ([^.]+)\\.([^.]+)\\.([^.]+)
-    transforms.route.replacement: $3
