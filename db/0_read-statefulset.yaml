@@ -13,8 +13,18 @@ spec:
       labels:
         app: read
     spec:
-      nodeSelector:
-        key: yjhome-server
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - read
       initContainers:
       - name: init-read
         image: mariadb:10.5.9
