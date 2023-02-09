@@ -1,0 +1,57 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: read-pv-0
+spec:
+  tolerations:
+  - key: node-role.kubernetes.io/master
+    effect: NoSchedule
+  capacity:
+    storage: 100Gi
+  accessModes:
+  - ReadWriteOnce
+  claimRef:
+    namespace: db
+    name: data-read-statefulset-0
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-storageclass
+    
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: read-pv-1
+spec:
+  tolerations:
+  - key: node-role.kubernetes.io/master
+    effect: NoSchedule
+  capacity:
+    storage: 100Gi
+  accessModes:
+  - ReadWriteOnce
+  claimRef:
+    namespace: db
+    name: data-read-statefulset-1
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-storageclass
+    
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: read-pv-2
+spec:
+  tolerations:
+  - key: node-role.kubernetes.io/master
+    effect: NoSchedule
+  capacity:
+    storage: 100Gi
+  accessModes:
+  - ReadWriteOnce
+  claimRef:
+    namespace: db
+    name: data-read-statefulset-2
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-storageclass

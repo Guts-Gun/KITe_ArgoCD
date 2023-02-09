@@ -13,13 +13,6 @@ spec:
       labels:
         app: read
     spec:
-      tolerations:
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/master
-        operator: Exists
-      - effect: NoSchedule
-        key: node-role.kubernetes.io/control-plane
-        operator: Exists
       initContainers:
       - name: init-read
         image: mariadb:10.5.9
@@ -172,7 +165,6 @@ spec:
       name: data
     spec:
       accessModes: ["ReadWriteOnce"]
-      storageClassName: nfs-storageclass
       resources:
         requests:
           storage: 100Gi
