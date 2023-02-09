@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: read-pv-0
+spec:
+  volumeMode: Filesystem
+  capacity:
+    storage: 100Gi
+  accessModes:
+  - ReadWriteOnce
+  claimRef:
+    namespace: db
+    name: data-read-statefulset-0
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-storageclass
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - yjhome-server
+    
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: read-pv-1
+spec:
+  volumeMode: Filesystem
+  capacity:
+    storage: 100Gi
+  accessModes:
+  - ReadWriteOnce
+  claimRef:
+    namespace: db
+    name: data-read-statefulset-1
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-storageclass
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - yjhome-server
+    
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: read-pv-2
+spec:
+  volumeMode: Filesystem
+  capacity:
+    storage: 100Gi
+  accessModes:
+  - ReadWriteOnce
+  claimRef:
+    namespace: db
+    name: data-read-statefulset-2
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-storageclass
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - yjhome-server
