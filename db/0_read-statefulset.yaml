@@ -14,14 +14,14 @@ spec:
         app: read
     spec:
       affinity:
-        podAffinity:
+        nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-            matchExpressions:
-            - key: kubernetes.io/master
-              operator: In
-              values:
-              - yjhome-server
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/master
+                operator: In
+                values:
+                - yjhome-server
       initContainers:
       - name: init-read
         image: mariadb:10.5.9
