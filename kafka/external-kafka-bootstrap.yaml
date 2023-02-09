@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: 'true'
+  labels:
+    app.kubernetes.io/instance: kafka-cluster
+    app.kubernetes.io/managed-by: strimzi-cluster-operator
+    app.kubernetes.io/name: kafka
+    app.kubernetes.io/part-of: strimzi-kafka-cluster
+    strimzi.io/cluster: kafka-cluster
+    strimzi.io/component-type: kafka
+    strimzi.io/discovery: 'true'
+    strimzi.io/kind: Kafka
+    strimzi.io/name: kafka-cluster-kafka
+  name: external-kafka-bootstrap
+  namespace: kafka
+  ownerReferences:
+    - apiVersion: kafka.strimzi.io/v1beta2
+      blockOwnerDeletion: false
+      controller: false
+      kind: Kafka
+      name: kafka-cluster
+      uid: 73bcbdeb-825a-4297-9641-a2313475e5c7
+spec:
+  clusterIP: None
+  ports:
+    - name: tcp-ctrlplane
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    - name: tcp-replication
+      port: 9091
+      protocol: TCP
+      targetPort: 9091
+    - name: tcp-clients
+      port: 9092
+      protocol: TCP
+      targetPort: 9092
+  publishNotReadyAddresses: true
+  selector:
+    strimzi.io/pod-name: kafka-cluster-kafka-0
+  sessionAffinity: None
+  type: LoadBalancer
