@@ -50,6 +50,9 @@ spec:
   - name: read
     port: 12010
     protocol: TCP
+  - name: kafka
+    port: 9092
+    protocol: TCP
   selector:
     app.kubernetes.io/component: controller
     app.kubernetes.io/instance: ingress-nginx
