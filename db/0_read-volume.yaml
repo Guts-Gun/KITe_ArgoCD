@@ -12,7 +12,6 @@ spec:
     namespace: db
     name: data-read-statefulset-0
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-storageclass
   nfs:
     path: /k8s
     server: 172.30.1.100
@@ -41,7 +40,6 @@ spec:
     namespace: db
     name: data-read-statefulset-1
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-storageclass
   nfs:
     path: /k8s
     server: 172.30.1.100
@@ -70,7 +68,6 @@ spec:
     namespace: db
     name: data-read-statefulset-2
   persistentVolumeReclaimPolicy: Retain
-  storageClassName: nfs-storageclass
   nfs:
     path: /k8s
     server: 172.30.1.100
