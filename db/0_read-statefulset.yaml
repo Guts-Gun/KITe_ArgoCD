@@ -3,15 +3,6 @@ kind: StatefulSet
 metadata:
   name: read-statefulset
 spec:
-  affinity:
-    podAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
-          matchExpressions:
-          - key: kubernetes.io/master
-            operator: In
-            values:
-            - yjhome-server
   selector:
     matchLabels:
       app: read
@@ -22,6 +13,15 @@ spec:
       labels:
         app: read
     spec:
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+            matchExpressions:
+            - key: kubernetes.io/master
+              operator: In
+              values:
+              - yjhome-server
       initContainers:
       - name: init-read
         image: mariadb:10.5.9
