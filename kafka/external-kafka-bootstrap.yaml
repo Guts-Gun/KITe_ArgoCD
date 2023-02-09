@@ -27,6 +27,7 @@ metadata:
       controller: false
       kind: Kafka
       name: kafka-cluster
+      uid: 73bcbdeb-825a-4297-9641-a2313475e5c7
 spec:
   ports:
     - name: tcp-replication
