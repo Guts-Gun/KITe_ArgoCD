@@ -25,6 +25,7 @@ spec:
                 operator: In
                 values:
                 - read
+            topologyKey: kubernetes.io/hostname
       initContainers:
       - name: init-read
         image: mariadb:10.5.9
