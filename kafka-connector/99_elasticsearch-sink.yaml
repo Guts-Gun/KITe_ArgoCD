@@ -6,7 +6,7 @@ metadata:
   labels:
     strimzi.io/cluster: kafka-connect-cluster3
 spec:
-  class: io.confluent.connect.elasticsearch.Elasticsearch
+  class: io.confluent.connect.elasticsearch.ElasticsearchSinkConnector
   config:
     tasks.max: 1
     topics: fluentd-container-logging
