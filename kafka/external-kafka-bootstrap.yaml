@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    strimzi.io/discovery: |-
+      [ {
+        "port" : 9092,
+        "tls" : false,
+        "protocol" : "kafka",
+        "auth" : "none"
+      } ]
+  labels:
+    app.kubernetes.io/instance: kafka-cluster
+    app.kubernetes.io/managed-by: strimzi-cluster-operator
+    app.kubernetes.io/name: kafka
+    app.kubernetes.io/part-of: strimzi-kafka-cluster
+    strimzi.io/cluster: kafka-cluster
+    strimzi.io/component-type: kafka
+    strimzi.io/discovery: 'true'
+    strimzi.io/kind: Kafka
+    strimzi.io/name: kafka-cluster-kafka
+  name: external-kafka-bootstrap
+  namespace: kafka
+  ownerReferences:
+    - apiVersion: kafka.strimzi.io/v1beta2
+      blockOwnerDeletion: false
+      controller: false
+      kind: Kafka
+      name: kafka-cluster
+spec:
+  ports:
+    - name: tcp-replication
+      port: 9091
+      protocol: TCP
+      targetPort: 9091
+    - name: tcp-clients
+      port: 9092
+      protocol: TCP
+      targetPort: 9092
+  selector:
+    strimzi.io/cluster: kafka-cluster
+    strimzi.io/kind: Kafka
+    strimzi.io/name: kafka-cluster-kafka
+  sessionAffinity: None
+  type: LoadBalancer
