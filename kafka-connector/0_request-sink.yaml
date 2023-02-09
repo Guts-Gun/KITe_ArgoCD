@@ -9,6 +9,7 @@ spec:
   class: io.confluent.connect.jdbc.JdbcSinkConnector
   tasksMax: 1
   config:
+    tasksMax: 1
     connection.url: "jdbc:mysql://read-statefulset-0.only-read-service.db.svc.cluster.local:3306/read"
     connection.user: "root"
     connection.password: "gutsandgun"
