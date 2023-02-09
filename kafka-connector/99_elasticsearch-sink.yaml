@@ -6,12 +6,12 @@ metadata:
   labels:
     strimzi.io/cluster: kafka-connect-cluster3
 spec:
-  class: io.confluent.connect.elasticsearch.ElasticsearchSinkConnector
+  class: io.confluent.connect.elasticsearch.Elasticsearch
   config:
     tasks.max: 1
     topics: fluentd-container-logging
     topic.index.map: fluentd-container-logging:fluentd_index
-    connection.url: http://elasticsearch-svc.monitoring.svc.cluster.local:95000
+    connection.url: http://elasticsearch-svc.monitoring.svc.cluster.local:9200
     type.name: log
     key.ignore: true
     schema.ignore: true
