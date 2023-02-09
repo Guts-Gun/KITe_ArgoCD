@@ -32,5 +32,5 @@ spec:
     transforms.unwrap.drop.tombstones: false
     
     transforms.route.type: org.apache.kafka.connect.transforms.RegexRouter
-    transforms.route.regex: ([^.]+)\\.([^.]+)\\.([^.]+)
+    transforms.route.regex: ([^.]+)\.([^.]+)\.([^.]+)
     transforms.route.replacement: $3
