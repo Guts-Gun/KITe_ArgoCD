@@ -3,7 +3,7 @@ kind: Service
 metadata:
   # Expose the management HTTP port on each node
   namespace: rabbit
-  name: rabbitmq-management
+  name: rabbitmq-0-0
   labels:
     app: rabbitmq
 spec:
