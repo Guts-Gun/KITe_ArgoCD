@@ -25,9 +25,10 @@ spec:
         #- name: RABBITMQ_ERLANG_COOKIE
         #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
         command:
-        - /bin/sh
-        - -c
-        - >
+        - bash
+        - "-c"
+        - |
+          set -ex
           [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
           ordinal=${BASH_REMATCH[1]}
           mkdir -p /rabbitmq-vol
@@ -36,13 +37,14 @@ spec:
           mkdir -p /rabbitmq-vol/$ordinal/rabbitmq/mnesia
           if [[ $ordinal -eq 0 ]]; then
             sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/0/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-          fi;
+          fi
           if [[ $ordinal -eq 1 ]]; then
             sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/1/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-          fi;
+          fi
           if [[ $ordinal -eq 2 ]]; then
             sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/2/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-          fi;
+          fi
+          exit 0
         lifecycle:
           postStart:
             exec:
