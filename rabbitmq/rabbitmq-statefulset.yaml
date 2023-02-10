@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:3.6.6-management-alpine
+        image: rabbitmq:3-management
         env:
         - name: RABBITMQ_DEFAULT_USER
           value: "gutsandgun"
@@ -31,7 +31,7 @@ spec:
               - /bin/sh
               - -c
               - >
-                chown rabbitmq:rabbitmq /var/lib/rabbitmq
+                chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 until rabbitmqctl node_health_check; do sleep 1; done;
                 if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
                   rabbitmqctl stop_app;
@@ -67,7 +67,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:3.6.6-management-alpine
+        image: rabbitmq:3-management
         env:
         - name: RABBITMQ_DEFAULT_USER
           value: "gutsandgun"
@@ -82,7 +82,7 @@ spec:
               - /bin/sh
               - -c
               - >
-                chown rabbitmq:rabbitmq /var/lib/rabbitmq
+                chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 until rabbitmqctl node_health_check; do sleep 1; done;
                 if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
                   rabbitmqctl stop_app;
@@ -118,7 +118,7 @@ spec:
     spec:
       containers:
       - name: rabbitmq
-        image: rabbitmq:3.6.6-management-alpine
+        image: rabbitmq:3-management
         env:
         - name: RABBITMQ_DEFAULT_USER
           value: "gutsandgun"
@@ -133,7 +133,7 @@ spec:
               - /bin/sh
               - -c
               - >
-                chown rabbitmq:rabbitmq /var/lib/rabbitmq
+                chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 until rabbitmqctl node_health_check; do sleep 1; done;
                 if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
                   rabbitmqctl stop_app;
