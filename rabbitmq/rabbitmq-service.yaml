@@ -9,6 +9,7 @@ metadata:
 spec:
   selector:
     app: rabbitmq
+    statefulset.kubernetes.io/pod-name: rabbitmq-0
   ports:
   - port: 8005
     name: http
@@ -21,3 +22,28 @@ spec:
   - port: 25672
     name: rabbitmq-dist
   type: LoadBalancer # Or LoadBalancer in production w/ proper security
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  # Expose the management HTTP port on each node
+  namespace: rabbit
+  name: rabbitmq-brokers
+  labels:
+    app: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+  ports:
+  - port: 8005
+    name: http
+    targetPort: 15672
+  - port: 9005
+    name: amqp
+    targetPort: 5672
+  - port: 4369
+    name: epmd
+  - port: 25672
+    name: rabbitmq-dist

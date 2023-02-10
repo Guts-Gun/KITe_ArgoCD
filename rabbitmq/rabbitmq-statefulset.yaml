@@ -4,7 +4,7 @@ metadata:
   namespace: rabbit
   name: rabbitmq
 spec:
-  replicas: 1
+  replicas: 3
   serviceName: rabbitmq
   selector:
     matchLabels:
@@ -22,8 +22,21 @@ spec:
           value: "gutsandgun"
         - name: RABBITMQ_DEFAULT_PASS
           value: "gutsandgun"
-        #- name: RABBITMQ_ERLANG_COOKIE
-        #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
+        - name: RABBITMQ_ERLANG_COOKIE
+          value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          if [[ $ordinal -eq 0 ]]; then
+            rabbitmqctl change_cluster_node_type disk
+          else
+            rabbitmqctl change_cluster_node_type ram
+            rabbitmqctl join_cluster rabbit@rabbitmq-0.rabbitmq-management
+          fi
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
           name: rabbitmq-data

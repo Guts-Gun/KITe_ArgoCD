@@ -50,8 +50,8 @@ spec:
   - name: read
     port: 12010
     protocol: TCP
-  - name: kafka
-    port: 9092
+  - name: rabbitmq
+    port: 9005
     protocol: TCP
   selector:
     app.kubernetes.io/component: controller
