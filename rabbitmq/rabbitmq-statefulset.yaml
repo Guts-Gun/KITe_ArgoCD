@@ -40,15 +40,12 @@ spec:
                 chown rabbitmq:rabbitmq /rabbitmq-vol
                 if [[ $ordinal -eq 0 ]]; then
                     sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/0/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-                    cp -nr /var/lib/rabbitmq/mnesia /rabbitmq-vol/0/rabbitmq/
                 fi
                 if [[ $ordinal -eq 1 ]]; then
                     sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/1/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-                    cp -nr /var/lib/rabbitmq/mnesia /rabbitmq-vol/1/rabbitmq/
                 fi
                 if [[ $ordinal -eq 2 ]]; then
                     sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/2/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-                    cp -nr /var/lib/rabbitmq/mnesia /rabbitmq-vol/2/rabbitmq/
                 fi
               - /bin/sh
               - -c
@@ -58,13 +55,12 @@ spec:
                   cat /etc/resolv.conf.new > /etc/resolv.conf;
                   rm /etc/resolv.conf.new;
                 fi;
-                
                 until rabbitmqctl node_health_check; do sleep 1; done;
+                rabbitmqctl stop_app;
                 if [[ "$HOSTNAME" != "rabbitmq-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0)" ]]; then
-                  rabbitmqctl stop_app;
                   rabbitmqctl join_cluster rabbit@rabbitmq-0;
-                  rabbitmqctl start_app;
                 fi;
+                rabbitmqctl start_app;
                 rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
         volumeMounts:
         - mountPath: /rabbitmq-vol
