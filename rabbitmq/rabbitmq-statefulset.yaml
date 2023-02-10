@@ -14,6 +14,39 @@ spec:
       labels:
         app: rabbitmq
     spec:
+      initContainers:
+      - name: init-rabbitmq
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: "gutsandgun"
+        - name: RABBITMQ_DEFAULT_PASS
+          value: "gutsandgun"
+        #- name: RABBITMQ_ERLANG_COOKIE
+        #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
+        command:
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          mkdir -p /rabbitmq-vol
+          mkdir -p /rabbitmq-vol/$ordinal
+          mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
+          
+          ln -s /rabbitmq-vol/$ordinal/rabbitmq /var/lib/
+          cp -r /rabbitmq-vol/.erlang.cookie /rabbitmq-vol/$ordinal/rabbitmq/
+          until rabbitmqctl node_health_check; do sleep 1; done;
+          if [[ ! $ordinal -eq 0 ]]; then
+            rabbitmqctl join_cluster rabbit@rabbitmq-0.rabbitmq-management
+            rabbitmqctl change_cluster_node_type ram
+          else
+            rabbitmqctl change_cluster_node_type disk
+          fi
+        volumeMounts:
+        - mountPath: /rabbitmq-vol
+          name: rabbitmq-data
       containers:
       - name: rabbitmq
         image: rabbitmq:3.6.6-management-alpine
@@ -36,6 +69,7 @@ spec:
                   cat /etc/resolv.conf.new > /etc/resolv.conf;
                   rm /etc/resolv.conf.new;
                 fi;
+                
                 until rabbitmqctl node_health_check; do sleep 1; done;
                 if [[ "$HOSTNAME" != "rabbitmq-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0)" ]]; then
                   rabbitmqctl stop_app;
