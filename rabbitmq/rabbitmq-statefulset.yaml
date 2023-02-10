@@ -34,7 +34,6 @@ spec:
           mkdir -p /rabbitmq-vol
           mkdir -p /rabbitmq-vol/$ordinal
           mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
-          rm -rf /var/lib/rabbitmq
           ln -s  /rabbitmq-vol/$ordinal/rabbitmq /var/lib/rabbitmq
           hostnamectl set-hostname rabbit0
           hostnamectl set-hostname rabbit1
