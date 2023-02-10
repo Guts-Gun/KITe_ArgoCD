@@ -37,7 +37,7 @@ spec:
           mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
           mkdir -p /rabbitmq-vol/$ordinal/rabbitmq/mnesia
           
-          mount --bind /rabbitmq-vol/$ordinal/rabbitmq /var/lib/
+          sudo mount --bind /rabbitmq-vol/$ordinal/rabbitmq /var/lib/
           cp -r /rabbitmq-vol/.erlang.cookie /rabbitmq-vol/$ordinal/rabbitmq/
         volumeMounts:
         - mountPath: /rabbitmq-vol
