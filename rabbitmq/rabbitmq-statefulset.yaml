@@ -36,6 +36,7 @@ spec:
           mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
           
           cp -r /rabbitmq-vol/.erlang.cookie /rabbitmq-vol/$ordinal/rabbitmq/
+          until rabbitmqctl node_health_check; do sleep 1; done;
           sed -i 's@/var/lib/rabbitmq@/rabbitmq-vol/$ordinal/rabbitmq@g' /etc/rabbitmq/rabbitmq-env.conf
         volumeMounts:
         - mountPath: /rabbitmq-vol
