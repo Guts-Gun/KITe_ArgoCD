@@ -23,7 +23,7 @@ spec:
         - name: RABBITMQ_DEFAULT_PASS
           value: "gutsandgun"
         - name: RABBITMQ_NODENAME
-          value: "rabbit"
+          value: "rabbitmq-cli-53"
         #- name: RABBITMQ_ERLANG_COOKIE
         #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
         command:
