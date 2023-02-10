@@ -33,8 +33,8 @@ spec:
           ordinal=${BASH_REMATCH[1]}
           mkdir -p /rabbitmq-vol
           mkdir -p /rabbitmq-vol/$ordinal
-          mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
-          ln -s  /rabbitmq-vol/$ordinal/rabbitmq /var/lib/
+          rm -rf /rabbitmq-vol/$ordinal/rabbitmq
+          ln -s /var/lib/rabbitmq /rabbitmq-vol/$ordinal/
           cp -r /rabbitmq-vol/.erlang.cookie /var/lib/rabbitmq/
           ls /var/lib/rabbitmq/
           ls /rabbitmq-vol/$ordinal/rabbitmq/
