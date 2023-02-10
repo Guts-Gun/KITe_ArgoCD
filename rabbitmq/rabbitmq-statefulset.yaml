@@ -2,9 +2,9 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   namespace: rabbit
-  name: rabbitmq
+  name: rabbitmq-0
 spec:
-  replicas: 3
+  replicas: 1
   serviceName: rabbitmq
   selector:
     matchLabels:
@@ -28,25 +28,6 @@ spec:
           postStart:
             exec:
               command:
-              - bash
-              - -c
-              - |
-                set -ex
-                [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
-                ordinal=${BASH_REMATCH[1]}
-                mkdir -p /rabbitmq-vol
-                mkdir -p /rabbitmq-vol/$ordinal
-                mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
-                chown rabbitmq:rabbitmq /rabbitmq-vol
-                if [[ $ordinal -eq 0 ]]; then
-                    sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/0/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-                fi
-                if [[ $ordinal -eq 1 ]]; then
-                    sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/1/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-                fi
-                if [[ $ordinal -eq 2 ]]; then
-                    sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/2/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-                fi
               - /bin/sh
               - -c
               - >
@@ -56,16 +37,129 @@ spec:
                   rm /etc/resolv.conf.new;
                 fi;
                 until rabbitmqctl node_health_check; do sleep 1; done;
-                rabbitmqctl stop_app;
-                if [[ "$HOSTNAME" != "rabbitmq-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0)" ]]; then
-                  rabbitmqctl join_cluster rabbit@rabbitmq-0;
+                if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
+                  rabbitmqctl stop_app;
+                  rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
+                  rabbitmqctl start_app;
                 fi;
-                rabbitmqctl start_app;
+                
                 rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
         volumeMounts:
-        - mountPath: /rabbitmq-vol
+        - mountPath: /var/lib/rabbitmq
           name: rabbitmq-data
       volumes:
       - name: rabbitmq-data # same as volumemouts name
         hostPath:
-          path: /home/worker/k8s/rabbitmq
+          path: /home/worker/k8s/rabbitmq-0
+          
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: rabbit
+  name: rabbitmq-1
+spec:
+  replicas: 1
+  serviceName: rabbitmq
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3.6.6-management-alpine
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: "gutsandgun"
+        - name: RABBITMQ_DEFAULT_PASS
+          value: "gutsandgun"
+        #- name: RABBITMQ_ERLANG_COOKIE
+        #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - >
+                if [ -z "$(grep rabbitmq /etc/resolv.conf)" ]; then
+                  sed "s/^search \([^ ]\+\)/search rabbitmq.\1 \1/" /etc/resolv.conf > /etc/resolv.conf.new;
+                  cat /etc/resolv.conf.new > /etc/resolv.conf;
+                  rm /etc/resolv.conf.new;
+                fi;
+                until rabbitmqctl node_health_check; do sleep 1; done;
+                if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
+                  rabbitmqctl stop_app;
+                  rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
+                  rabbitmqctl start_app;
+                fi;
+                
+                rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
+        volumeMounts:
+        - mountPath: /var/lib/rabbitmq
+          name: rabbitmq-data
+      volumes:
+      - name: rabbitmq-data # same as volumemouts name
+        hostPath:
+          path: /home/worker/k8s/rabbitmq-1
+          
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  namespace: rabbit
+  name: rabbitmq-2
+spec:
+  replicas: 1
+  serviceName: rabbitmq
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: rabbitmq:3.6.6-management-alpine
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: "gutsandgun"
+        - name: RABBITMQ_DEFAULT_PASS
+          value: "gutsandgun"
+        #- name: RABBITMQ_ERLANG_COOKIE
+        #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - >
+                if [ -z "$(grep rabbitmq /etc/resolv.conf)" ]; then
+                  sed "s/^search \([^ ]\+\)/search rabbitmq.\1 \1/" /etc/resolv.conf > /etc/resolv.conf.new;
+                  cat /etc/resolv.conf.new > /etc/resolv.conf;
+                  rm /etc/resolv.conf.new;
+                fi;
+                until rabbitmqctl node_health_check; do sleep 1; done;
+                if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
+                  rabbitmqctl stop_app;
+                  rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
+                  rabbitmqctl start_app;
+                fi;
+                
+                rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
+        volumeMounts:
+        - mountPath: /var/lib/rabbitmq
+          name: rabbitmq-data
+      volumes:
+      - name: rabbitmq-data # same as volumemouts name
+        hostPath:
+          path: /home/worker/k8s/rabbitmq-2
