@@ -38,7 +38,7 @@ spec:
                 mkdir -p /rabbitmq-vol/$ordinal
                 mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
                 mkdir -p /rabbitmq-vol/$ordinal/rabbitmq/mnesia
-                chown root:root /rabbitmq-vol/$ordinal/rabbitmq/mnesia
+                chown rabbitmq:rabbitmq /rabbitmq-vol/$ordinal/rabbitmq/mnesia
                 if [[ $ordinal -eq 0 ]]; then
                     sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/0/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
                 fi
