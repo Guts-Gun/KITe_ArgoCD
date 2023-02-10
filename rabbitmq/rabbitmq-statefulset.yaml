@@ -4,7 +4,7 @@ metadata:
   namespace: rabbit
   name: rabbitmq
 spec:
-  replicas: 1
+  replicas: 3
   serviceName: rabbitmq
   selector:
     matchLabels:
