@@ -35,8 +35,9 @@ spec:
           mkdir -p /rabbitmq-vol
           mkdir -p /rabbitmq-vol/$ordinal
           mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
+          mkdir -p /rabbitmq-vol/$ordinal/rabbitmq/mnesia
           
-          ln -sf /rabbitmq-vol/$ordinal/rabbitmq /var/lib/
+          ln -sf /rabbitmq-vol/$ordinal/rabbitmq/mnesia /var/lib/rabbitmq/
           cp -r /rabbitmq-vol/.erlang.cookie /rabbitmq-vol/$ordinal/rabbitmq/
         volumeMounts:
         - mountPath: /rabbitmq-vol
