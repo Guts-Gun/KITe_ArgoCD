@@ -35,7 +35,6 @@ spec:
                 1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ=
                 EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
-                until rabbitmqctl node_health_check; do sleep 1; done;
                 rabbitmqctl stop_app;
                 rabbitmqctl start_app;
                 rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
@@ -107,7 +106,6 @@ spec:
                 1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ=
                 EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
-                until rabbitmqctl node_health_check; do sleep 1; done;
                 rabbitmqctl stop_app;
                 rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
                 rabbitmqctl start_app;
@@ -183,7 +181,6 @@ spec:
                 1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ=
                 EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
-                until rabbitmqctl node_health_check; do sleep 1; done;
                 rabbitmqctl stop_app;
                 rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
                 rabbitmqctl start_app;
