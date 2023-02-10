@@ -24,13 +24,6 @@ spec:
           value: "gutsandgun"
         #- name: RABBITMQ_ERLANG_COOKIE
         #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          
-          exit 0
         lifecycle:
           postStart:
             exec:
