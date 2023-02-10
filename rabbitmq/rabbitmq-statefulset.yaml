@@ -32,7 +32,7 @@ spec:
               - -c
               - >
                 cat << EOF > /var/lib/rabbitmq/.erlang.cookie
-                RAGUCBADVGCSTVBFSDQO
+                1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ=
                 EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 rabbitmqctl stop_app;
@@ -82,7 +82,7 @@ spec:
               - -c
               - >
                 cat << EOF > /var/lib/rabbitmq/.erlang.cookie
-                RAGUCBADVGCSTVBFSDQO
+                1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ=
                 EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 rabbitmqctl stop_app;
@@ -133,7 +133,7 @@ spec:
               - -c
               - >
                 cat << EOF > /var/lib/rabbitmq/.erlang.cookie
-                RAGUCBADVGCSTVBFSDQO
+                1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ=
                 EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 rabbitmqctl stop_app;
