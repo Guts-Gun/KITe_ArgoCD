@@ -34,7 +34,6 @@ spec:
           mkdir -p /rabbitmq-vol
           mkdir -p /rabbitmq-vol/$ordinal
           ln -s /rabbitmq-vol/$ordinal /var/lib/rabbitmq
-          rabbitmqctl cluster_status
           if [[ $ordinal -eq 0 ]]; then
             rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
           else
