@@ -31,17 +31,14 @@ spec:
           set -ex
           [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
           ordinal=${BASH_REMATCH[1]}
-          service rabbitmq-server start
           rabbitmqctl cluster_status
-          rabbitmqctl stop_app
           if [[ $ordinal -eq 0 ]]; then
             rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
           else
-            rabbitmqctl join_cluster rabbit@rabbitmq-0.rabbitmq-management
+            rabbitmqctl join_cluster rabbit@rabbitmq-0
             rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
           fi
           rabbitmqctl start_app
-          rabbitmqctl cluster_status
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
           name: rabbitmq-data
