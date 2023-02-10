@@ -34,7 +34,7 @@ spec:
           mkdir -p /rabbitmq-vol
           mkdir -p /rabbitmq-vol/$ordinal
           mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
-          ln -s  /var/lib/rabbitmq /rabbitmq-vol/$ordinal/rabbitmq
+          ln -sv  /var/lib/rabbitmq /rabbitmq-vol/$ordinal/rabbitmq
         volumeMounts:
         - mountPath: /rabbitmq-vol
           name: rabbitmq-data
