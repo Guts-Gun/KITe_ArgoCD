@@ -33,6 +33,7 @@ spec:
           ordinal=${BASH_REMATCH[1]}
           mkdir -p /rabbitmq-vol
           mkdir -p /rabbitmq-vol/$ordinal
+          rm -rf /var/lib/rabbitmq
           ln -s /rabbitmq-vol/$ordinal /var/lib/rabbitmq
         volumeMounts:
         - mountPath: /rabbitmq-vol
