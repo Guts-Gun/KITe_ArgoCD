@@ -31,9 +31,6 @@ spec:
               - /bin/sh
               - -c
               - >
-                cat << EOF > /var/lib/rabbitmq/.erlang.cookie
-                1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ=
-                EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 rabbitmqctl stop_app;
                 rabbitmqctl start_app;
@@ -102,9 +99,6 @@ spec:
               - /bin/sh
               - -c
               - >
-                cat << EOF > /var/lib/rabbitmq/.erlang.cookie
-                1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ=
-                EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 rabbitmqctl stop_app;
                 rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
@@ -177,9 +171,6 @@ spec:
               - /bin/sh
               - -c
               - >
-                cat << EOF > /var/lib/rabbitmq/.erlang.cookie
-                1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ=
-                EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 rabbitmqctl stop_app;
                 rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
