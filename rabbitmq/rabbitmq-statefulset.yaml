@@ -14,40 +14,6 @@ spec:
       labels:
         app: rabbitmq
     spec:
-      initContainers:
-      - name: init-rabbitmq
-        image: rabbitmq:3.6.6-management-alpine
-        env:
-        - name: RABBITMQ_DEFAULT_USER
-          value: "gutsandgun"
-        - name: RABBITMQ_DEFAULT_PASS
-          value: "gutsandgun"
-        #- name: RABBITMQ_ERLANG_COOKIE
-        #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
-        command:
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
-          mkdir -p /rabbitmq-vol
-          mkdir -p /rabbitmq-vol/$ordinal
-          mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
-          mkdir -p /rabbitmq-vol/$ordinal/rabbitmq/mnesia
-          if [[ $ordinal -eq 0 ]]; then
-            sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/0/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-          fi
-          if [[ $ordinal -eq 1 ]]; then
-            sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/1/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-          fi
-          if [[ $ordinal -eq 2 ]]; then
-            sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/2/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
-          fi
-        volumeMounts:
-        - mountPath: /rabbitmq-vol
-          name: rabbitmq-data
       containers:
       - name: rabbitmq
         image: rabbitmq:3.6.6-management-alpine
@@ -65,6 +31,21 @@ spec:
               - /bin/sh
               - -c
               - >
+                [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+                ordinal=${BASH_REMATCH[1]}
+                mkdir -p /rabbitmq-vol
+                mkdir -p /rabbitmq-vol/$ordinal
+                mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
+                mkdir -p /rabbitmq-vol/$ordinal/rabbitmq/mnesia
+                if [[ $ordinal -eq 0 ]]; then
+                    sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/0/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
+                fi
+                if [[ $ordinal -eq 1 ]]; then
+                    sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/1/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
+                fi
+                if [[ $ordinal -eq 2 ]]; then
+                    sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/2/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
+                fi
                 if [ -z "$(grep rabbitmq /etc/resolv.conf)" ]; then
                   sed "s/^search \([^ ]\+\)/search rabbitmq.\1 \1/" /etc/resolv.conf > /etc/resolv.conf.new;
                   cat /etc/resolv.conf.new > /etc/resolv.conf;
