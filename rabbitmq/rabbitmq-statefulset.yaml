@@ -35,7 +35,7 @@ spec:
           mkdir -p /rabbitmq-vol/$ordinal
           mkdir -p /rabbitmq-vol/$ordinal/rabbitmq
           ln -s  /rabbitmq-vol/$ordinal/rabbitmq /var/lib/rabbitmq
-          cp -r /rabbitmq-vol/.erlang_cookie /var/lib/rabbitmq/
+          cp -r /rabbitmq-vol/.erlang.cookie /var/lib/rabbitmq/
           if [[ ! $ordinal -eq 0 ]]; then
             rabbitmqctl join_cluster rabbit@rabbit0
             rabbitmqctl change_cluster_node_type ram
