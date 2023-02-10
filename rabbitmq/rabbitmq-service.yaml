@@ -9,7 +9,7 @@ metadata:
 spec:
   selector:
     app: rabbitmq
-    statefulset.kubernetes.io/pod-name: rabbitmq-0
+    statefulset.kubernetes.io/pod-name: rabbitmq-0-0
   ports:
   - port: 8005
     name: http
