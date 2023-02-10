@@ -40,7 +40,7 @@ spec:
                 mkdir -p /rabbitmq-vol/$ordinal/rabbitmq/mnesia
                 chmod -R 755 /rabbitmq-vol/$ordinal/rabbitmq/mnesia
                 if [[ $ordinal -eq 0 ]]; then
-                sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/0/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
+                    sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/0/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
                 fi
                 if [[ $ordinal -eq 1 ]]; then
                     sed -i 's@MNESIA_BASE=${SYS_PREFIX}/var/lib/rabbitmq/mnesia@MNESIA_BASE=${SYS_PREFIX}/rabbitmq-vol/1/rabbitmq/mnesia@g' /opt/rabbitmq/sbin/rabbitmq-defaults
