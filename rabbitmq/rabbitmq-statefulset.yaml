@@ -35,7 +35,7 @@ spec:
           mkdir -p /rabbitmq-vol/$ordinal
           rm -rf /rabbitmq-vol/$ordinal/rabbitmq
           ln -s /var/lib/rabbitmq /rabbitmq-vol/$ordinal/
-          cp -r /rabbitmq-vol/.erlang.cookie /var/lib/rabbitmq/
+          cp -r /rabbitmq-vol/.erlang.cookie /rabbitmq-vol/$ordinal/rabbitmq/
           ls /var/lib/rabbitmq/
           ls /rabbitmq-vol/$ordinal/rabbitmq/
           if [[ ! $ordinal -eq 0 ]]; then
