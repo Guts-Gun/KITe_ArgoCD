@@ -34,12 +34,6 @@ spec:
           mkdir -p /rabbitmq-vol
           mkdir -p /rabbitmq-vol/$ordinal
           ln -s /rabbitmq-vol/$ordinal /var/lib/rabbitmq
-          if [[ $ordinal -eq 0 ]]; then
-            rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
-          else
-            rabbitmqctl join_cluster rabbit@rabbitmq-0
-            rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
-          fi
         volumeMounts:
         - mountPath: /rabbitmq-vol
           name: rabbitmq-data
