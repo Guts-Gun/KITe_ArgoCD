@@ -24,8 +24,25 @@ spec:
           value: "gutsandgun"
         #- name: RABBITMQ_ERLANG_COOKIE
         #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          mkdir /rabbitmq-vol
+          mkdir /rabbitmq-vol/$ordinal
+          ln -s /rabbitmq-vol/$ordinal /var/lib/rabbitmq
+          rabbitmqctl cluster_status
+          if [[ $ordinal -eq 0 ]]; then
+            rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
+          else
+            rabbitmqctl join_cluster rabbit@rabbitmq-0
+            rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
+          fi
         volumeMounts:
-        - mountPath: /var/lib/rabbitmq
+        - mountPath: /rabbitmq-vol
           name: rabbitmq-data
       volumes:
       - name: rabbitmq-data # same as volumemouts name
