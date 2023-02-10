@@ -32,10 +32,8 @@ spec:
           [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
           ordinal=${BASH_REMATCH[1]}
           if [[ $ordinal -eq 0 ]]; then
-            rabbitmqctl change_cluster_node_type disk
             cp -r /var/lib/rabbitmq/.erlang.cookie /var/lib/rabbitmq/
           else
-            rabbitmqctl change_cluster_node_type ram
             rabbitmqctl join_cluster rabbit@rabbitmq-0.rabbitmq-management
             cp -r /var/lib/rabbitmq/.erlang.cookie /var/lib/rabbitmq/
           fi
