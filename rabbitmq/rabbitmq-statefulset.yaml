@@ -16,6 +16,7 @@ spec:
     spec:
       initContainers:
       - name: init-rabbitmq
+        image: rabbitmq:3.6.6-management-alpine
         env:
         - name: RABBITMQ_DEFAULT_USER
           value: "gutsandgun"
