@@ -31,10 +31,11 @@ spec:
           set -ex
           [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
           ordinal=${BASH_REMATCH[1]}
-          if [[ ! $ordinal -eq 0 ]]; then
+          if [[ $ordinal -eq 0 ]]; then
+            exit
+          else
             rabbitmqctl join_cluster rabbit@rabbitmq-0.rabbitmq-management
           fi
-          exit 1
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
           name: rabbitmq-data
