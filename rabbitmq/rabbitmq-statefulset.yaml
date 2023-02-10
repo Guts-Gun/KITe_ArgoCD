@@ -31,6 +31,7 @@ spec:
               - /bin/sh
               - -c
               - >
+                chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 until rabbitmqctl node_health_check; do sleep 1; done;
                 if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
                   rabbitmqctl stop_app;
@@ -82,6 +83,7 @@ spec:
               - /bin/sh
               - -c
               - >
+                chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 until rabbitmqctl node_health_check; do sleep 1; done;
                 if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
                   rabbitmqctl stop_app;
@@ -133,6 +135,7 @@ spec:
               - /bin/sh
               - -c
               - >
+                chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
                 until rabbitmqctl node_health_check; do sleep 1; done;
                 if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
                   rabbitmqctl stop_app;
