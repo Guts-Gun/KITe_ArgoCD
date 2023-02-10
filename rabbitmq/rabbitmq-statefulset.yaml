@@ -64,6 +64,27 @@ spec:
       labels:
         app: rabbitmq
     spec:
+      initContainers:
+      - name: init-rabbitmq
+        image: rabbitmq:3-management
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: "gutsandgun"
+        - name: RABBITMQ_DEFAULT_PASS
+          value: "gutsandgun"
+        #- name: RABBITMQ_ERLANG_COOKIE
+        #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          cp -r /rabbit-key/.erlang.cookie /var/lib/rabbitmq/
+        volumeMounts:
+        - mountPath: /var/lib/rabbitmq
+          name: rabbitmq-data
+        - mountPath: /rabbit-key
+          name: rabbit-key
       containers:
       - name: rabbitmq
         image: rabbitmq:3-management
@@ -96,6 +117,9 @@ spec:
       - name: rabbitmq-data # same as volumemouts name
         hostPath:
           path: /home/worker/k8s/rabbitmq-1
+      - name: rabbit-key # same as volumemouts name
+        hostPath:
+          path: /home/worker/k8s/rabbitmq-0
           
 ---
 
@@ -115,6 +139,27 @@ spec:
       labels:
         app: rabbitmq
     spec:
+      initContainers:
+      - name: init-rabbitmq
+        image: rabbitmq:3-management
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: "gutsandgun"
+        - name: RABBITMQ_DEFAULT_PASS
+          value: "gutsandgun"
+        #- name: RABBITMQ_ERLANG_COOKIE
+        #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          cp -r /rabbit-key/.erlang.cookie /var/lib/rabbitmq/
+        volumeMounts:
+        - mountPath: /var/lib/rabbitmq
+          name: rabbitmq-data
+        - mountPath: /rabbit-key
+          name: rabbit-key
       containers:
       - name: rabbitmq
         image: rabbitmq:3-management
@@ -147,3 +192,6 @@ spec:
       - name: rabbitmq-data # same as volumemouts name
         hostPath:
           path: /home/worker/k8s/rabbitmq-2
+      - name: rabbit-key # same as volumemouts name
+        hostPath:
+          path: /home/worker/k8s/rabbitmq-0
