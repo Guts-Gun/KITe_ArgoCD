@@ -31,12 +31,12 @@ spec:
               - /bin/sh
               - -c
               - >
+                cat << EOF > /var/lib/rabbitmq/.erlang.cookie
+                RAGUCBADVGCSTVBFSDQO
+                EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
-                if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
-                  rabbitmqctl stop_app;
-                  rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
-                  rabbitmqctl start_app;
-                fi;
+                rabbitmqctl stop_app;
+                rabbitmqctl start_app;
                 rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
@@ -81,12 +81,13 @@ spec:
               - /bin/sh
               - -c
               - >
+                cat << EOF > /var/lib/rabbitmq/.erlang.cookie
+                RAGUCBADVGCSTVBFSDQO
+                EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
-                if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
-                  rabbitmqctl stop_app;
-                  rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
-                  rabbitmqctl start_app;
-                fi;
+                rabbitmqctl stop_app;
+                rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
+                rabbitmqctl start_app;
                 rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
@@ -131,12 +132,13 @@ spec:
               - /bin/sh
               - -c
               - >
+                cat << EOF > /var/lib/rabbitmq/.erlang.cookie
+                RAGUCBADVGCSTVBFSDQO
+                EOF
                 chown -R rabbitmq:rabbitmq /var/lib/rabbitmq
-                if [[ "$HOSTNAME" != "rabbitmq-0-0" && -z "$(rabbitmqctl cluster_status | grep rabbitmq-0-0)" ]]; then
-                  rabbitmqctl stop_app;
-                  rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
-                  rabbitmqctl start_app;
-                fi;
+                rabbitmqctl stop_app;
+                rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
+                rabbitmqctl start_app;
                 rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
