@@ -38,13 +38,6 @@ spec:
           
           ln -s /rabbitmq-vol/$ordinal/rabbitmq /var/lib/
           cp -r /rabbitmq-vol/.erlang.cookie /rabbitmq-vol/$ordinal/rabbitmq/
-          until rabbitmqctl node_health_check; do sleep 1; done;
-          if [[ ! $ordinal -eq 0 ]]; then
-            rabbitmqctl join_cluster rabbit@rabbitmq-0.rabbitmq-management
-            rabbitmqctl change_cluster_node_type ram
-          else
-            rabbitmqctl change_cluster_node_type disk
-          fi
         volumeMounts:
         - mountPath: /rabbitmq-vol
           name: rabbitmq-data
