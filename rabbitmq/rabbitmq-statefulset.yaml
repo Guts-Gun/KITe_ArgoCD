@@ -32,9 +32,10 @@ spec:
           [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
           ordinal=${BASH_REMATCH[1]}
           if [[ $ordinal -eq 0 ]]; then
-            exit
+            rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
           else
             rabbitmqctl join_cluster rabbit@rabbitmq-0.rabbitmq-management
+            rabbitmqctl set_policy ha-all "^ha\." '{"ha-mode":"all"}'
           fi
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
