@@ -14,19 +14,6 @@ spec:
       labels:
         app: rabbitmq
     spec:
-      initContainers:
-      - name: init-rabbitmq
-        image: rabbitmq:3-management
-        env:
-        - name: RABBITMQ_DEFAULT_USER
-          value: "gutsandgun"
-        - name: RABBITMQ_DEFAULT_PASS
-          value: "gutsandgun"
-        #- name: RABBITMQ_ERLANG_COOKIE
-        #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
-        volumeMounts:
-        - mountPath: /rabbitmq-vol
-          name: rabbitmq-data
       containers:
       - name: rabbitmq
         image: rabbitmq:3-management
@@ -37,6 +24,18 @@ spec:
           value: "gutsandgun"
         #- name: RABBITMQ_ERLANG_COOKIE
         #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          mkdir -p /rabbitmq-vol
+          mkdir -p /rabbitmq-vol/$ordinal
+          rm -rf /rabbitmq-vol/$ordinal/rabbitmq
+          ln -s /var/lib/rabbitmq /rabbitmq-vol/$ordinal/
+          cp -r /rabbitmq-vol/.erlang.cookie /rabbitmq-vol/$ordinal/rabbitmq/
         volumeMounts:
         - mountPath: /rabbitmq-vol
           name: rabbitmq-data
