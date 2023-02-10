@@ -38,7 +38,6 @@ spec:
                   rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
                   rabbitmqctl start_app;
                 fi;
-                
                 rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
@@ -90,7 +89,6 @@ spec:
                   rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
                   rabbitmqctl start_app;
                 fi;
-                
                 rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
@@ -142,7 +140,6 @@ spec:
                   rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
                   rabbitmqctl start_app;
                 fi;
-                
                 rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
