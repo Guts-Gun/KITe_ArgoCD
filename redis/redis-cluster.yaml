@@ -47,6 +47,26 @@ spec:
   selector:
     app: redis-cluster
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-cluster-headless
+  namespace: redis
+  labels:
+    app: redis-cluster
+spec:
+  ports:
+  - port: 6379
+    targetPort: 6379
+    name: client
+  - port: 16379
+    targetPort: 16379
+    name: gossip
+  type: ClusterIP
+  clusterIP: None
+  selector:
+    app: redis-cluster
+---
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
