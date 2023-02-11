@@ -30,6 +30,58 @@ kind: Service
 metadata:
   # Expose the management HTTP port on each node
   namespace: rabbit
+  name: rabbitmq-1-0
+  labels:
+    app: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+    statefulset.kubernetes.io/pod-name: rabbitmq-1-0
+  ports:
+  - port: 8005
+    name: http
+    targetPort: 15672
+  - port: 9005
+    name: amqp
+    targetPort: 5672
+  - port: 4369
+    name: epmd
+  - port: 25672
+    name: rabbitmq-dist
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  # Expose the management HTTP port on each node
+  namespace: rabbit
+  name: rabbitmq-2-0
+  labels:
+    app: rabbitmq
+spec:
+  selector:
+    app: rabbitmq
+    statefulset.kubernetes.io/pod-name: rabbitmq-2-0
+  ports:
+  - port: 8005
+    name: http
+    targetPort: 15672
+  - port: 9005
+    name: amqp
+    targetPort: 5672
+  - port: 4369
+    name: epmd
+  - port: 25672
+    name: rabbitmq-dist
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  # Expose the management HTTP port on each node
+  namespace: rabbit
   name: rabbitmq-brokers
   labels:
     app: rabbitmq
