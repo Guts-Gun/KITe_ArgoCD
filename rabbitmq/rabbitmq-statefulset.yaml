@@ -14,25 +14,6 @@ spec:
       labels:
         app: rabbitmq
     spec:
-      initContainers:
-      - name: init-rabbitmq
-        image: rabbitmq:3-management
-        env:
-        - name: RABBITMQ_DEFAULT_USER
-          value: "gutsandgun"
-        - name: RABBITMQ_DEFAULT_PASS
-          value: "gutsandgun"
-        #- name: RABBITMQ_ERLANG_COOKIE
-        #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
-        command:
-        - bash
-        - "-c"
-        - |
-          set -ex
-          rm -rf /var/lib/rabbitmq/.erlang.cookie
-        volumeMounts:
-        - mountPath: /var/lib/rabbitmq
-          name: rabbitmq-data
       containers:
       - name: rabbitmq
         image: rabbitmq:3-management
@@ -43,16 +24,6 @@ spec:
           value: "gutsandgun"
         #- name: RABBITMQ_ERLANG_COOKIE
         #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
-        lifecycle:
-          postStart:
-            exec:
-              command:
-              - /bin/sh
-              - -c
-              - >
-                rabbitmqctl stop_app;
-                rabbitmqctl start_app;
-                rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
           name: rabbitmq-data
@@ -110,17 +81,6 @@ spec:
           value: "gutsandgun"
         #- name: RABBITMQ_ERLANG_COOKIE
         #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
-        lifecycle:
-          postStart:
-            exec:
-              command:
-              - /bin/sh
-              - -c
-              - >
-                rabbitmqctl stop_app;
-                rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
-                rabbitmqctl start_app;
-                rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
           name: rabbitmq-data
@@ -181,17 +141,6 @@ spec:
           value: "gutsandgun"
         #- name: RABBITMQ_ERLANG_COOKIE
         #  value: "1WqgH8N2v1qDBDZDbNy8Bg9IkPWLEpu79m6q+0t36lQ="
-        lifecycle:
-          postStart:
-            exec:
-              command:
-              - /bin/sh
-              - -c
-              - >
-                rabbitmqctl stop_app;
-                rabbitmqctl join_cluster rabbit@rabbitmq-0-0;
-                rabbitmqctl start_app;
-                rabbitmqctl set_policy ha-all "." '{"ha-mode":"all"}'
         volumeMounts:
         - mountPath: /var/lib/rabbitmq
           name: rabbitmq-data
