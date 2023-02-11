@@ -99,14 +99,3 @@ spec:
         - name: config
           mountPath: /conf
           readOnly: false
-        - name: data
-          mountPath: /data
-          readOnly: false
-      volumes:
-      - name: config
-        configMap:
-          name: redis-config
-          defaultMode: 0755
-      - name: data # same as volumemouts name
-        hostPath:
-          path: /home/worker/k8s/redis-cluster
