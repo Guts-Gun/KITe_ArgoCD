@@ -99,3 +99,8 @@ spec:
         - name: config
           mountPath: /conf
           readOnly: false
+      volumes:
+      - name: config
+        configMap:
+          name: redis-config
+          defaultMode: 0755
