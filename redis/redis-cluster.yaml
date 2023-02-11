@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: redis-cluster
+  name: redis-config
   namespace: redis
   labels:
     app: redis-cluster
@@ -96,16 +96,16 @@ spec:
             fieldRef:
               fieldPath: status.podIP
         volumeMounts:
-        - name: conf
+        - name: config
           mountPath: /conf
           readOnly: false
         - name: data
           mountPath: /data
           readOnly: false
       volumes:
-      - name: conf
+      - name: config
         configMap:
-          name: redis-cluster
+          name: redis-config
           defaultMode: 0755
       volumes:
       - name: data # same as volumemouts name
