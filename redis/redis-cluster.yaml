@@ -62,7 +62,6 @@ spec:
   - port: 16379
     targetPort: 16379
     name: gossip
-  type: ClusterIP
   clusterIP: None
   selector:
     app: redis-cluster
