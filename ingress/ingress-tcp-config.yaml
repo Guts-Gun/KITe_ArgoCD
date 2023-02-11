@@ -13,3 +13,4 @@ data:
   12008: db/scheduler-service:3306
   12010: db/read-service:3306
   9005: rabbit/rabbitmq-brokers:9005
+  6379: redis/redis-cluster:6379
