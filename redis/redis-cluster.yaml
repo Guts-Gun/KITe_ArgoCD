@@ -107,7 +107,6 @@ spec:
         configMap:
           name: redis-config
           defaultMode: 0755
-      volumes:
       - name: data # same as volumemouts name
         hostPath:
           path: /home/worker/k8s/redis-cluster
