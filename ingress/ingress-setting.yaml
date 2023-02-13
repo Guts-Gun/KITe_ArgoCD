@@ -1,7 +1,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: db-ingress
+  name: service-ingress
   annotations:
     kubernetes.io/ingress.class: "nginx"
     ingress.kubernetes.io/ssl-redirect: "false"
@@ -10,10 +10,10 @@ spec:
   rules:
   - http:
       paths:
-      - path: /
+      - path: /log
         pathType: Prefix
         backend:
           service:
-            name: read-service
+            name: log-service
             port: 
-              number: 12001
+              number: 80
