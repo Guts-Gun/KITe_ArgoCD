@@ -14,6 +14,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: log-service.service.svc.cluster.local
+            name: log-service
             port: 
               number: 80
