@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: auth
-        image: rnjsxorl3075/kite_auth:14
+        image: rnjsxorl3075/kite_auth:21
         ports:
         - containerPort: 8007
         imagePullPolicy: Always
