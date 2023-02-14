@@ -17,3 +17,59 @@ spec:
             name: log-service
             port: 
               number: 80
+      - path: /auth
+        pathType: Prefix
+        backend:
+          service:
+            name: auth-service
+            port: 
+              number: 80
+      - path: /brokermanager
+        pathType: Prefix
+        backend:
+          service:
+            name: brokermanager-service
+            port: 
+              number: 80
+      - path: /request
+        pathType: Prefix
+        backend:
+          service:
+            name: requestmsg-service
+            port: 
+              number: 80
+      - path: /result
+        pathType: Prefix
+        backend:
+          service:
+            name: result-service
+            port: 
+              number: 80
+      - path: /scheduler
+        pathType: Prefix
+        backend:
+          service:
+            name: scheduler-service
+            port: 
+              number: 80
+      - path: /sendingBlock
+        pathType: Prefix
+        backend:
+          service:
+            name: sendmanager-service
+            port: 
+              number: 80
+      - path: /sending
+        pathType: Prefix
+        backend:
+          service:
+            name: sendmanager-service
+            port: 
+              number: 80
+      - path: /user
+        pathType: Prefix
+        backend:
+          service:
+            name: user-service
+            port: 
+              number: 80
