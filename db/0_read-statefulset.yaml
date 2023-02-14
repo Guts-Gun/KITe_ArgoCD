@@ -24,18 +24,10 @@ spec:
         - "-c"
         - |
           set -ex
-          # Generate mysql server-id from pod ordinal index.
-          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
           echo [mysqld] > /mnt/conf.d/server-id.cnf
           # Add an offset to avoid reserved server-id=0 value.
-          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
-          # Copy appropriate conf.d files from config-map to emptyDir.
-          if [[ $ordinal -eq 0 ]]; then
-            cp /mnt/config-map/primary.cnf /mnt/conf.d/
-          else
-            cp /mnt/config-map/replica.cnf /mnt/conf.d/
-          fi          
+          echo server-id=$((100)) >> /mnt/conf.d/server-id.cnf
+          cp /mnt/config-map/primary.cnf /mnt/conf.d/        
         volumeMounts:
         - name: conf
           mountPath: /mnt/conf.d
@@ -53,12 +45,7 @@ spec:
           # Skip the clone on primary (ordinal index 0).
           [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
           ordinal=${BASH_REMATCH[1]}
-          [[ $ordinal -eq 0 ]] && exit 0
-          
-          # Clone data from previous peer.
-          ncat --recv-only read-statefulset-$(($ordinal-1))-0.only-read-service 3307 | mbstream -x -C /var/lib/mysql
-          # Prepare the backup.
-          mariabackup --prepare --target-dir=/var/lib/mysql         
+          [[ $ordinal -eq 0 ]] && exit 0       
         volumeMounts:
         - name: data
           mountPath: /var/lib/mysql
@@ -112,34 +99,6 @@ spec:
           
           cd /var/lib/mysql
           mkdir -p read
-          # Determine binlog position of cloned data, if any.
-          if [[ -f xtrabackup_slave_info && "x$(<xtrabackup_slave_info)" != "x" ]]; then
-            cat xtrabackup_slave_info | sed -E 's/;$//g' > change_master_to.sql.in
-            rm -f xtrabackup_slave_info xtrabackup_binlog_info
-          elif [[ -f xtrabackup_binlog_info ]]; then
-            string=`cat xtrabackup_binlog_info`
-            value=(${string})
-            rm -f xtrabackup_binlog_info xtrabackup_slave_info
-            echo "CHANGE MASTER TO MASTER_LOG_FILE='${value[0]}',\
-                  MASTER_LOG_POS=${value[1]}" > change_master_to.sql.in
-          fi
-
-          if [[ -f change_master_to.sql.in ]]; then
-            echo "Waiting for mysqld to be ready (accepting connections)"
-            until mysql -h 127.0.0.1 -e "SELECT 1" -pgutsandgun; do sleep 1; done
-
-            echo "Initializing replication from clone position"
-            mysql -h 127.0.0.1 \
-                  -pgutsandgun \
-                  -e "$(<change_master_to.sql.in), \
-                          MASTER_HOST='read-statefulset-0-0.only-read-service', \
-                          MASTER_USER='root', \
-                          MASTER_PASSWORD='gutsandgun', \
-                          MASTER_CONNECT_RETRY=10; \
-                        START SLAVE;" || exit 1
-            # In case of container restart, attempt this at-most-once.
-            mv change_master_to.sql.in change_master_to.sql.orig
-          fi
 
           # Start a server to send backups when requested by peers.
           exec ncat --listen --keep-open --send-only --max-conns=1 3307 -c \
@@ -194,16 +153,10 @@ spec:
           set -ex
           # Generate mysql server-id from pod ordinal index.
           [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
           echo [mysqld] > /mnt/conf.d/server-id.cnf
           # Add an offset to avoid reserved server-id=0 value.
-          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
-          # Copy appropriate conf.d files from config-map to emptyDir.
-          if [[ $ordinal -eq 0 ]]; then
-            cp /mnt/config-map/primary.cnf /mnt/conf.d/
-          else
-            cp /mnt/config-map/replica.cnf /mnt/conf.d/
-          fi          
+          echo server-id=$((100 + 1)) >> /mnt/conf.d/server-id.cnf
+          cp /mnt/config-map/replica.cnf /mnt/conf.d/
         volumeMounts:
         - name: conf
           mountPath: /mnt/conf.d
@@ -218,13 +171,9 @@ spec:
           set -ex
           # Skip the clone if data already exists.
           [[ -d /var/lib/mysql/mysql ]] && exit 0
-          # Skip the clone on primary (ordinal index 0).
-          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
-          [[ $ordinal -eq 0 ]] && exit 0
           
           # Clone data from previous peer.
-          ncat --recv-only read-statefulset-$(($ordinal-1))-0.only-read-service 3307 | mbstream -x -C /var/lib/mysql
+          ncat --recv-only read-statefulset-0-0.only-read-service 3307 | mbstream -x -C /var/lib/mysql
           # Prepare the backup.
           mariabackup --prepare --target-dir=/var/lib/mysql         
         volumeMounts:
@@ -360,18 +309,10 @@ spec:
         - "-c"
         - |
           set -ex
-          # Generate mysql server-id from pod ordinal index.
-          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
           echo [mysqld] > /mnt/conf.d/server-id.cnf
           # Add an offset to avoid reserved server-id=0 value.
-          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
-          # Copy appropriate conf.d files from config-map to emptyDir.
-          if [[ $ordinal -eq 0 ]]; then
-            cp /mnt/config-map/primary.cnf /mnt/conf.d/
-          else
-            cp /mnt/config-map/replica.cnf /mnt/conf.d/
-          fi          
+          echo server-id=$((100 + 2)) >> /mnt/conf.d/server-id.cnf
+          cp /mnt/config-map/replica.cnf /mnt/conf.d/ 
         volumeMounts:
         - name: conf
           mountPath: /mnt/conf.d
@@ -386,13 +327,9 @@ spec:
           set -ex
           # Skip the clone if data already exists.
           [[ -d /var/lib/mysql/mysql ]] && exit 0
-          # Skip the clone on primary (ordinal index 0).
-          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
-          ordinal=${BASH_REMATCH[1]}
-          [[ $ordinal -eq 0 ]] && exit 0
           
           # Clone data from previous peer.
-          ncat --recv-only read-statefulset-$(($ordinal-1))-0.only-read-service 3307 | mbstream -x -C /var/lib/mysql
+          ncat --recv-only read-statefulset-1-0.only-read-service 3307 | mbstream -x -C /var/lib/mysql
           # Prepare the backup.
           mariabackup --prepare --target-dir=/var/lib/mysql         
         volumeMounts:
