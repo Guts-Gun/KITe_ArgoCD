@@ -13,19 +13,6 @@ spec:
       labels:
         app: read
     spec:
-      tolerations:
-      - key: node-role.kubernetes.io/master
-        effect: NoSchedule
-      affinity:
-        podAffinity:
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - read
-            topologyKey: kubernetes.io/hostname
       initContainers:
       - name: init-read
         image: mariadb:10.5.9
@@ -176,3 +163,339 @@ spec:
       - name: data
         hostPath:
           path: /home/worker/k8s/read-0
+          
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: read-statefulset-1
+spec:
+  selector:
+    matchLabels:
+      app: read
+  serviceName: only-read-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: read
+    spec:
+      initContainers:
+      - name: init-read
+        image: mariadb:10.5.9
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "gutsandgun"
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          # Generate mysql server-id from pod ordinal index.
+          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          echo [mysqld] > /mnt/conf.d/server-id.cnf
+          # Add an offset to avoid reserved server-id=0 value.
+          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
+          # Copy appropriate conf.d files from config-map to emptyDir.
+          if [[ $ordinal -eq 0 ]]; then
+            cp /mnt/config-map/primary.cnf /mnt/conf.d/
+          else
+            cp /mnt/config-map/replica.cnf /mnt/conf.d/
+          fi          
+        volumeMounts:
+        - name: conf
+          mountPath: /mnt/conf.d
+        - name: config-map
+          mountPath: /mnt/config-map
+      - name: clone-read
+        image: gingeredgiantkc/mariabackup
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          # Skip the clone if data already exists.
+          [[ -d /var/lib/mysql/mysql ]] && exit 0
+          # Skip the clone on primary (ordinal index 0).
+          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          [[ $ordinal -eq 0 ]] && exit 0
+          
+          # Clone data from previous peer.
+          ncat --recv-only read-statefulset-$(($ordinal-1)).only-read-service 3307 | mbstream -x -C /var/lib/mysql
+          # Prepare the backup.
+          mariabackup --prepare --target-dir=/var/lib/mysql         
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+      containers:
+      - name: read
+        image: mariadb:10.5.9
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "gutsandgun"
+        ports:
+        - name: read
+          containerPort: 3306
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+        resources:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
+        livenessProbe:
+          exec:
+            command: ["mysqladmin", "ping", "-pgutsandgun"]
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 15
+        readinessProbe:
+          exec:
+            # Check we can execute queries over TCP (skip-networking is off).
+            command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1", "-pgutsandgun"]
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          timeoutSeconds: 10
+      - name: mariabackup
+        image: gingeredgiantkc/mariabackup
+        ports:
+        - name: mariabackup
+          containerPort: 3307
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          
+          cd /var/lib/mysql
+          mkdir -p read
+          # Determine binlog position of cloned data, if any.
+          if [[ -f xtrabackup_slave_info && "x$(<xtrabackup_slave_info)" != "x" ]]; then
+            cat xtrabackup_slave_info | sed -E 's/;$//g' > change_master_to.sql.in
+            rm -f xtrabackup_slave_info xtrabackup_binlog_info
+          elif [[ -f xtrabackup_binlog_info ]]; then
+            string=`cat xtrabackup_binlog_info`
+            value=(${string})
+            rm -f xtrabackup_binlog_info xtrabackup_slave_info
+            echo "CHANGE MASTER TO MASTER_LOG_FILE='${value[0]}',\
+                  MASTER_LOG_POS=${value[1]}" > change_master_to.sql.in
+          fi
+
+          if [[ -f change_master_to.sql.in ]]; then
+            echo "Waiting for mysqld to be ready (accepting connections)"
+            until mysql -h 127.0.0.1 -e "SELECT 1" -pgutsandgun; do sleep 1; done
+
+            echo "Initializing replication from clone position"
+            mysql -h 127.0.0.1 \
+                  -pgutsandgun \
+                  -e "$(<change_master_to.sql.in), \
+                          MASTER_HOST='read-statefulset-0.only-read-service', \
+                          MASTER_USER='root', \
+                          MASTER_PASSWORD='gutsandgun', \
+                          MASTER_CONNECT_RETRY=10; \
+                        START SLAVE;" || exit 1
+            # In case of container restart, attempt this at-most-once.
+            mv change_master_to.sql.in change_master_to.sql.orig
+          fi
+
+          # Start a server to send backups when requested by peers.
+          exec ncat --listen --keep-open --send-only --max-conns=1 3307 -c \
+            "mariabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root -pgutsandgun"          
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      volumes:
+      - name: conf
+        emptyDir: {}
+      - name: config-map
+        configMap:
+          name: read-config
+      - name: data
+        hostPath:
+          path: /home/worker/k8s/read-1
+          
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: read-statefulset-2
+spec:
+  selector:
+    matchLabels:
+      app: read
+  serviceName: only-read-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: read
+    spec:
+      initContainers:
+      - name: init-read
+        image: mariadb:10.5.9
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "gutsandgun"
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          # Generate mysql server-id from pod ordinal index.
+          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          echo [mysqld] > /mnt/conf.d/server-id.cnf
+          # Add an offset to avoid reserved server-id=0 value.
+          echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
+          # Copy appropriate conf.d files from config-map to emptyDir.
+          if [[ $ordinal -eq 0 ]]; then
+            cp /mnt/config-map/primary.cnf /mnt/conf.d/
+          else
+            cp /mnt/config-map/replica.cnf /mnt/conf.d/
+          fi          
+        volumeMounts:
+        - name: conf
+          mountPath: /mnt/conf.d
+        - name: config-map
+          mountPath: /mnt/config-map
+      - name: clone-read
+        image: gingeredgiantkc/mariabackup
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          # Skip the clone if data already exists.
+          [[ -d /var/lib/mysql/mysql ]] && exit 0
+          # Skip the clone on primary (ordinal index 0).
+          [[ $HOSTNAME =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          [[ $ordinal -eq 0 ]] && exit 0
+          
+          # Clone data from previous peer.
+          ncat --recv-only read-statefulset-$(($ordinal-1)).only-read-service 3307 | mbstream -x -C /var/lib/mysql
+          # Prepare the backup.
+          mariabackup --prepare --target-dir=/var/lib/mysql         
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+      containers:
+      - name: read
+        image: mariadb:10.5.9
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "gutsandgun"
+        ports:
+        - name: read
+          containerPort: 3306
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+        resources:
+          limits:
+            memory: 2Gi
+          requests:
+            cpu: 500m
+            memory: 1Gi
+        livenessProbe:
+          exec:
+            command: ["mysqladmin", "ping", "-pgutsandgun"]
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 15
+        readinessProbe:
+          exec:
+            # Check we can execute queries over TCP (skip-networking is off).
+            command: ["mysql", "-h", "127.0.0.1", "-e", "SELECT 1", "-pgutsandgun"]
+          initialDelaySeconds: 30
+          periodSeconds: 20
+          timeoutSeconds: 10
+      - name: mariabackup
+        image: gingeredgiantkc/mariabackup
+        ports:
+        - name: mariabackup
+          containerPort: 3307
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          
+          cd /var/lib/mysql
+          mkdir -p read
+          # Determine binlog position of cloned data, if any.
+          if [[ -f xtrabackup_slave_info && "x$(<xtrabackup_slave_info)" != "x" ]]; then
+            cat xtrabackup_slave_info | sed -E 's/;$//g' > change_master_to.sql.in
+            rm -f xtrabackup_slave_info xtrabackup_binlog_info
+          elif [[ -f xtrabackup_binlog_info ]]; then
+            string=`cat xtrabackup_binlog_info`
+            value=(${string})
+            rm -f xtrabackup_binlog_info xtrabackup_slave_info
+            echo "CHANGE MASTER TO MASTER_LOG_FILE='${value[0]}',\
+                  MASTER_LOG_POS=${value[1]}" > change_master_to.sql.in
+          fi
+
+          if [[ -f change_master_to.sql.in ]]; then
+            echo "Waiting for mysqld to be ready (accepting connections)"
+            until mysql -h 127.0.0.1 -e "SELECT 1" -pgutsandgun; do sleep 1; done
+
+            echo "Initializing replication from clone position"
+            mysql -h 127.0.0.1 \
+                  -pgutsandgun \
+                  -e "$(<change_master_to.sql.in), \
+                          MASTER_HOST='read-statefulset-0.only-read-service', \
+                          MASTER_USER='root', \
+                          MASTER_PASSWORD='gutsandgun', \
+                          MASTER_CONNECT_RETRY=10; \
+                        START SLAVE;" || exit 1
+            # In case of container restart, attempt this at-most-once.
+            mv change_master_to.sql.in change_master_to.sql.orig
+          fi
+
+          # Start a server to send backups when requested by peers.
+          exec ncat --listen --keep-open --send-only --max-conns=1 3307 -c \
+            "mariabackup --backup --slave-info --stream=xbstream --host=127.0.0.1 --user=root -pgutsandgun"          
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+      volumes:
+      - name: conf
+        emptyDir: {}
+      - name: config-map
+        configMap:
+          name: read-config
+      - name: data
+        hostPath:
+          path: /home/worker/k8s/read-2
