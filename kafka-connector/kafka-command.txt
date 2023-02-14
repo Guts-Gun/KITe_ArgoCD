@@ -1,7 +1,9 @@
 kubectl exec -n kafka kafka-cluster-kafka-0 -- curl -X POST "http://kafka-connect-cluster3-connect-api:8083/connectors/read-sink/restart"
 
 
-kubectl exec -n kafka kafka-cluster-kafka-0 -- curl -X GET "http://kafka-connect-cluster3-connect-api:8083/connectors/read-sink/status"
+kubectl exec -n kafka kafka-cluster-kafka-0 -- curl -X GET "http://kafka-connect-cluster3-connect-api:8083/connectors/log-sink/status"
+
+kubectl exec -n kafka kafka-cluster-kafka-0 -- curl -X GET "http://kafka-connect-cluster3-connect-api:8083/connectors"
 
 kubectl exec -n kafka kafka-cluster-kafka-0 -- bin/kafka-topics.sh --bootstrap-server=localhost:9092 --list
 
