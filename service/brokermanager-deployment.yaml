@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: brokermanager
-        image: rnjsxorl3075/kite_brokermanager:13
+        image: rnjsxorl3075/kite_brokermanager:14
         ports:
         - containerPort: 8005
         imagePullPolicy: Always
