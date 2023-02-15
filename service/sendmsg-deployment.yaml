@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: sendmsg
-        image: rnjsxorl3075/kite_sendmsg:7
+        image: rnjsxorl3075/kite_sendmsg:8
         ports:
         - containerPort: 8021
         imagePullPolicy: Always
