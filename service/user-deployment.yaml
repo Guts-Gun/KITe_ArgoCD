@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: user
-        image: rnjsxorl3075/kite_user:9
+        image: rnjsxorl3075/kite_user:10
         ports:
         - containerPort: 8001
         imagePullPolicy: Always
