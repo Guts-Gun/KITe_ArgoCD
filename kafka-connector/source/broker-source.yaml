@@ -27,7 +27,6 @@ spec:
     database.history.kafka.topic: dbhistory.broker
     schema.history.internal.kafka.bootstrap.servers: kafka-cluster-kafka-bootstrap:9092
     schema.history.internal.kafka.topic: schema-changes.broker
-    snapshot.mode: schema_only
     include.schema.changes: true
     key.converter: org.apache.kafka.connect.json.JsonConverter
     key.converter.schemas.enable: true
