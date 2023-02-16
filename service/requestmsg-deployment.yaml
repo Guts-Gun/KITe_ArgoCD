@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: requestmsg
-        image: rnjsxorl3075/kite_requestmsg:30
+        image: rnjsxorl3075/kite_requestmsg:31
         ports:
         - containerPort: 8011
         imagePullPolicy: Always
