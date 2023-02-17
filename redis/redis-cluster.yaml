@@ -170,7 +170,7 @@ metadata:
     app: redis-cluster
 spec:
   serviceName: redis-cluster
-  replicas: 6
+  replicas: 1
   selector:
     matchLabels:
       app: redis-cluster
