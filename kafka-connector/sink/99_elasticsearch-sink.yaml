@@ -8,7 +8,6 @@ metadata:
 spec:
   class: io.confluent.connect.elasticsearch.ElasticsearchSinkConnector
   config:
-    tasks.max: 1
     topics: fluentd-container-logging
     topic.index.map: fluentd-container-logging:fluentd_index
     connection.url: http://elasticsearch-svc.monitoring.svc.cluster.local:9200
