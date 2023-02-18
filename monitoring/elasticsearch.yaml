@@ -20,10 +20,6 @@ spec:
         env:
         - name: discovery.type
           value: single-node
-        command:
-        - bash
-        - -c
-        - cp -r /usr/share/elasticsearch/data/elasticsearch.yml /usr/share/elasticsearch/config/
         resources:
           limits:
             memory: 2Gi
@@ -36,10 +32,15 @@ spec:
         volumeMounts:
         - name: elastic-pvc
           mountPath: /usr/share/elasticsearch/data
+        - name: elastic-config
+          mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
       volumes:
       - name: elastic-pvc # same as volumemouts name
         hostPath:
           path: /home/worker/k8s/elastic
+      - name: elastic-config # same as volumemouts name
+        hostPath:
+          path: /home/worker/k8s/elastic/elasticsearch.yml
 ---
 apiVersion: v1
 kind: Service
