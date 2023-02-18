@@ -20,6 +20,12 @@ spec:
         env:
         - name: discovery.type
           value: single-node
+        command:
+        - bash
+        - -c
+        - |
+          set -ex
+          cp -r /etc/elasticsearch/elasticseach.yml /usr/share/elasticsearch/data/
         resources:
           limits:
             memory: 2Gi
