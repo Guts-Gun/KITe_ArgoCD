@@ -25,7 +25,7 @@ spec:
         - -c
         - |
           set -ex
-          cp -r /usr/share/elasticsearch/config/elasticseach.yml /usr/share/elasticsearch/data/
+          cp -r /usr/share/elasticsearch/config/elasticsearch.yml /usr/share/elasticsearch/data/
         resources:
           limits:
             memory: 2Gi
