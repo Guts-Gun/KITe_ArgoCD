@@ -16,7 +16,7 @@ spec:
     database.server.name: db
     topic.prefix: write
     database.include.list: request
-    snapshot.mode: schema_only
+    snapshot.mode: schema_only_recovery
     # table.whitelist: request
     topic.creation.default.partitions: 3
     topic.creation.default.replication.factor: 3
