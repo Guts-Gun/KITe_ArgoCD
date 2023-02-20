@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: sendmanager
-        image: rnjsxorl3075/kite_sendmanager:28
+        image: rnjsxorl3075/kite_sendmanager:32
         ports:
         - containerPort: 8004
         imagePullPolicy: Always
