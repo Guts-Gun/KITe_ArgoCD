@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: scheduler
-        image: rnjsxorl3075/kite_scheduler:16
+        image: rnjsxorl3075/kite_scheduler:19
         ports:
         - containerPort: 8003
         imagePullPolicy: Always
