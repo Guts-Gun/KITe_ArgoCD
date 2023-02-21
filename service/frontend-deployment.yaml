@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: rnjsxorl3075/kite_frontend:49
+        image: rnjsxorl3075/kite_frontend:50
         ports:
         - containerPort: 3000
         imagePullPolicy: Always
