@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: sendemail
-        image: rnjsxorl3075/kite_sendemail:22
+        image: rnjsxorl3075/kite_sendemail:23
         ports:
         - containerPort: 8022
         imagePullPolicy: Always
